@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import L from "leaflet";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
+import Routing from "./Routing"; // Ensure this is imported correctly
 
 // Correct the paths to the marker images
 delete L.Icon.Default.prototype._getIconUrl;
@@ -13,29 +14,33 @@ L.Icon.Default.mergeOptions({
 	shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// Define a component to add routing
-const Routing = () => {
-	const map = useMap();
+const MapComponent = () => {
+	// Declare currentPosition and setCurrentPosition using useState
+	const [currentPosition, setCurrentPosition] = useState(null);
 
 	useEffect(() => {
-		if (!map) return;
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				setCurrentPosition([
+					position.coords.latitude,
+					position.coords.longitude,
+				]);
+			},
+			(error) => {
+				console.error("Error fetching location:", error);
+				// Fallback or notify user
+			},
+			{ timeout: 5000, enableHighAccuracy: true } // Adjust these values as needed
+		);
+	}, []);
 
-		const routingControl = L.Routing.control({
-			waypoints: [L.latLng(34.0699, -118.4438), L.latLng(34.0689, -118.4452)],
-			routeWhileDragging: true,
-		}).addTo(map);
+	if (!currentPosition) {
+		return <div>Loading or please allow location access...</div>;
+	}
 
-		// Debugging: Log when the control is added
-		console.log("Routing control added");
-	}, [map]);
-
-	return null;
-};
-
-const MapComponent = () => {
 	return (
 		<MapContainer
-			center={[34.0699, -118.4438]}
+			center={currentPosition}
 			zoom={13}
 			scrollWheelZoom={true}
 			style={{ height: "100vh", width: "100%" }}
@@ -44,7 +49,7 @@ const MapComponent = () => {
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<Routing />
+			<Routing startPosition={currentPosition} />
 		</MapContainer>
 	);
 };
