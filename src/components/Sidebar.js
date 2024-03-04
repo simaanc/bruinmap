@@ -1,3 +1,5 @@
+import L from 'leaflet';
+
 L.Control.Sidebar = L.Control.extend({
 
     includes: L.Evented ? L.Evented.prototype : L.Mixin.Events,
@@ -28,10 +30,10 @@ L.Control.Sidebar = L.Control.extend({
         container.appendChild(content);
 
         // Create close button and attach it if configured
-        if (this.options.closeButton) {
-            var close = this._closeButton =
-                L.DomUtil.create('a', 'close', container);
-            close.innerHTML = '&times;';
+        if (this._closeButton && this._close) {
+            var close = this._closeButton;
+        
+            L.DomEvent.off(close, 'click', this.hide, this);
         }
     },
 
@@ -191,7 +193,7 @@ L.Control.Sidebar = L.Control.extend({
     },
 
     _handleTransitionEvent: function (e) {
-        if (e.propertyName == 'left' || e.propertyName == 'right')
+        if (e.propertyName === 'left' || e.propertyName === 'right')
             this.fire(this.isVisible() ? 'shown' : 'hidden');
     }
 });
