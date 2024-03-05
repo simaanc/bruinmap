@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Polygon, useMap, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Polygon, useMap, Popup, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -91,7 +91,7 @@ const getDivIcon = (text, bounds) => {
 const roomStyle = {
   color: "blue",
   fillColor: "#f0e6ff",
-  fillOpacity: 1,
+  fillOpacity: .3,
   weight: 1,
 };
 
@@ -119,10 +119,10 @@ const floorData = [
       {
         name: "Room 2F",
         coords: [
-          [34.0691, -118.4436],
-          [34.0692, -118.4436],
-          [34.0692, -118.4435],
-          [34.0691, -118.4435],
+			[34.068477144450085, -118.44340842768426],
+			[34.06847641055582, -118.4425360090241],
+			[34.06927886408003, -118.44254954177468],
+			[34.06926485157086, -118.44342353246515],
         ],
         content: "Details about Room 1 on Floor 2",
       },
@@ -131,63 +131,77 @@ const floorData = [
   },
 ];
 
-const FloorPlan = () => {
-  const [currentFloor, setCurrentFloor] = useState(floorData[0].name);
-
-  const handleFloorChange = (event) => {
-    setCurrentFloor(event.target.value);
+const ZoomListener = ({ setZoomLevel }) => {
+	useMapEvents({
+	  zoomend: (e) => {
+		setZoomLevel(e.target.getZoom());
+	  },
+	});
+  
+	return null;
   };
 
-  return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      {/* Floor switcher UI positioned at the top right */}
-      <div
-        style={{
-          position: "absolute",
-          zIndex: 1000,
-          background: "white",
-          padding: "10px",
-          top: "10px", // Adjust as needed
-          right: "10px", // Adjust as needed
-          borderRadius: "5px", // Optional, for rounded corners
-          boxShadow: "0 2px 4px rgba(0,0,0,0.2)", // Optional, for shadow effect
-        }}>
-        <select
-          onChange={handleFloorChange}
-          value={currentFloor}
-          style={{ padding: "5px", borderRadius: "5px" }}>
-          {floorData.map((floor) => (
-            <option key={floor.name} value={floor.name}>
-              {floor.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <MapContainer
-        center={[34.0689, -118.4436]}
-        zoom={18}
-        style={{ height: "100%", width: "100%" }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-		  maxNativeZoom = {18}
-          maxZoom={20}
-        />
-        {floorData
-          .filter((floor) => floor.name === currentFloor)
-          .flatMap((floor) =>
-            floor.rooms.map((room, idx) => (
-              <Polygon
-                key={`${idx}`}
-                pathOptions={roomStyle}
-                positions={room.coords}>
-                <Popup>{room.content}</Popup>
-                <DivIcon positions={room.coords} text={room.name} />
-              </Polygon>
-            ))
-          )}
-      </MapContainer>
-    </div>
-  );
-};
+  const FloorPlan = () => {
+	const [currentFloor, setCurrentFloor] = useState(floorData[0].name);
+	const [zoomLevel, setZoomLevel] = useState(18); // Initial zoom level of the map
+  
+	const handleFloorChange = (event) => {
+	  setCurrentFloor(event.target.value);
+	};
+  
+	return (
+	  <div style={{ display: "flex", height: "100vh" }}>
+		<MapContainer
+		  center={[34.0689, -118.4436]}
+		  zoom={18}
+		  style={{ height: "100%", width: "100%" }}>
+		  <TileLayer
+			url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+			maxZoom={24}
+		  />
+		  {/* Place the ZoomListener component inside MapContainer */}
+		  <ZoomListener setZoomLevel={setZoomLevel} />
+		  {floorData
+			.filter((floor) => floor.name === currentFloor)
+			.flatMap((floor) =>
+			  floor.rooms.map((room, idx) => (
+				<Polygon
+				  key={`${idx}`}
+				  pathOptions={roomStyle}
+				  positions={room.coords}>
+				  <Popup>{room.content}</Popup>
+				  <DivIcon positions={room.coords} text={room.name} />
+				</Polygon>
+			  ))
+			)}
+		</MapContainer>
+		{/* Conditionally render the floor changer based on zoom level */}
+		{zoomLevel > 19 && (
+		  <div
+			style={{
+			  position: "absolute",
+			  zIndex: 1000,
+			  background: "white",
+			  padding: "10px",
+			  top: "10px",
+			  right: "10px",
+			  borderRadius: "5px",
+			  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+			}}>
+			<select
+			  onChange={handleFloorChange}
+			  value={currentFloor}
+			  style={{ padding: "5px", borderRadius: "5px" }}>
+			  {floorData.map((floor) => (
+				<option key={floor.name} value={floor.name}>
+				  {floor.name}
+				</option>
+			  ))}
+			</select>
+		  </div>
+		)}
+	  </div>
+	);
+  };
 
 export default FloorPlan;
