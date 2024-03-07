@@ -6,23 +6,18 @@ import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 // import Sidebar from "./Sidebar"
 import LoginPopup from "./LoginPopup";
 import MyNavbar from "./Navbar";
-import Home from "./Home";
 
-function App() {
+function Home() {
 	return (
- 
-    <Router>
-      
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/Login" element={<Login />} /> */}
-        <Route path="/SignUp" element={<SignUpPage />} />
-        {/* <Route path="/MapComponent" element={<MapComponent />} /> */}
-      </Routes>
-    </Router>
-
+    <div>
+      {/* <Sidebar /> */}
+      <MyNavbar />
+      {/* <LoginPopup /> */}
+      <MapComponent />
+    
+    </div>
     
 	);
 }
 
-export default App;
+export default Home;
