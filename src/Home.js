@@ -4,7 +4,6 @@ import Login from "./Login";
 import SignUpPage from "./SignUpPage";
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 // import Sidebar from "./Sidebar"
-import LoginPopup from "./LoginPopup";
 import MyNavbar from "./Navbar";
 
 function Home() {

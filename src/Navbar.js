@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import {Navbar, Container, Row, Col, Button, Form} from 'react-bootstrap';
 import SignIn from "./components/auth/SignIn"
 import SignUp from "./SignUpPage"
 import { useNavigate } from 'react-router-dom';
+// import { AuthContext } from "./components/auth/AuthProvider";
+import {signOut, getAuth} from "firebase/auth";
 
 export default function MyNavbar() {
   const navigate = useNavigate();
@@ -11,10 +13,25 @@ export default function MyNavbar() {
     navigate('/SignUp')
   }
 
+  // const handleSignUp = (e) => {
+
+  // }
+
+  
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handleEventsClick = (e) => {
 
   }
-  
+
+
+
   return(
     <div>
 
@@ -39,6 +56,9 @@ export default function MyNavbar() {
           </Navbar.Brand>
           <Navbar.Brand>
             <Button onClick={handleSignUp}>Sign Up</Button>
+          </Navbar.Brand>
+          <Navbar.Brand>
+            <Button onClick={handleSignOut}>Sign Out</Button>
           </Navbar.Brand>
         </Container>
       </Navbar>

@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client"; // Import createRoot
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 
 // Find the root container
 const container = document.getElementById("root");
@@ -11,6 +12,8 @@ const root = createRoot(container); // Create a root for the container
 // Render the app using the root.render method
 root.render(
 	<React.StrictMode>
-		<App />
+    <BrowserRouter>
+		  <App /> 
+    </BrowserRouter>
 	</React.StrictMode>
 );
