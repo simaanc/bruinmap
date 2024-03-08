@@ -11,7 +11,7 @@ function LoggedInHome() {
 	return (
     <div>
       {/* <Sidebar /> */}
-      <MyNavbar />
+      <MyNavbar bg="dark" />
       <h1>LOGGED IN</h1>
       {/* <LoginPopup /> */}
       <MapComponent />

@@ -18,9 +18,9 @@ export default function HomeNavbar() {
         <Container>
           <Navbar.Brand>
             <img 
-            src={require('./Assets/icon.jpg')} //logo placeholder
+            src="https://i.imgur.com/pSTs7Pe.png"
             // width="30"
-            height="70"
+            height="64"
             className="d-inline-blck align-top"
             />
           </Navbar.Brand>
