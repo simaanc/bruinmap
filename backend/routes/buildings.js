@@ -16,6 +16,7 @@ router.route("/add").post((req, res) => {
     name,
     coords,
     floors,
+    center,
   });
 
   newBuilding

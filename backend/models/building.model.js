@@ -16,6 +16,7 @@ const buildingSchema = new Schema({
   name: { type: String, required: true },
   coords: { type: [[Number]], required: true },
   floors: [floorSchema],
+  center: { type: [Number] },
 });
 
 const Building = mongoose.model("Building", buildingSchema);
