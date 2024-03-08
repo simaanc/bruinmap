@@ -33,6 +33,21 @@
 	width: 100%;
 }
 
+.room-label {
+	background-color: transparent;
+	border: none;
+	box-shadow: none;
+	font-weight: bold;
+}
+
+.custom-tooltip {
+	/* Example CSS based on your desired tooltip appearance */
+	background-color: white;
+	color: #333;
+	border-radius: 8px;
+	padding: 4px 8px;
+}
+
 @keyframes App-logo-spin {
 	from {
 		transform: rotate(0deg);

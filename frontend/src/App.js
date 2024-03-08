@@ -1,4 +1,5 @@
 import React from "react";
+
 // import MapComponent from "./MapComponent"; // Ensure this path is correct
 // import Login from "./Login";
 import SignUpPage from "./SignUpPage";
@@ -29,7 +30,6 @@ function App() {
         {/* </Router> */}
       </AuthContextProvider>
     </div>
-    
 	);
 }
 
