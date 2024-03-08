@@ -1,26 +1,22 @@
 import React, { useEffect, useContext } from 'react'
 import {Navbar, Container, Row, Col, Button, Form} from 'react-bootstrap';
 import SignIn from "./components/auth/SignIn"
-import SignUp from "./SignUpPage"
 import { useNavigate } from 'react-router-dom';
-// import { AuthContext } from "./components/auth/AuthProvider";
-import {signOut, getAuth} from "firebase/auth";
+import { UserAuth } from './Context/AuthContext';
 
 export default function MyNavbar() {
+  const { user, logout} = UserAuth();
   const navigate = useNavigate();
 
   const handleSignUp = (e) => {
     navigate('/SignUp')
   }
 
-  // const handleSignUp = (e) => {
-
-  // }
-
-  
-  async function handleSignOut() {
+  const  handleSignOut = async () =>  {
     try {
-      await signOut();
+      await logout();
+      navigate('/Home')
+      console.log('You are logged out')
     } catch (error) {
       console.log(error);
     }
@@ -29,8 +25,6 @@ export default function MyNavbar() {
   const handleEventsClick = (e) => {
 
   }
-
-
 
   return(
     <div>
@@ -49,14 +43,14 @@ export default function MyNavbar() {
           <Navbar.Brand>
             <Button variant="outline-success"><h2>Events</h2></Button>
           </Navbar.Brand>
-          <Navbar.Brand>
+          {/* <Navbar.Brand>
             <Container>
               <SignIn />
             </Container>
-          </Navbar.Brand>
-          <Navbar.Brand>
+          </Navbar.Brand> */}
+          {/* <Navbar.Brand>
             <Button onClick={handleSignUp}>Sign Up</Button>
-          </Navbar.Brand>
+          </Navbar.Brand> */}
           <Navbar.Brand>
             <Button onClick={handleSignOut}>Sign Out</Button>
           </Navbar.Brand>

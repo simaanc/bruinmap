@@ -5,13 +5,12 @@ import SignUpPage from "./SignUpPage";
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 // import Sidebar from "./Sidebar"
 import MyNavbar from "./Navbar";
+import HomeNavbar from "./HomeNavbar";
 
 function Home() {
 	return (
     <div>
-      {/* <Sidebar /> */}
-      <MyNavbar />
-      {/* <LoginPopup /> */}
+      <HomeNavbar />
       <MapComponent />
     
     </div>
