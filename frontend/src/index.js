@@ -2,6 +2,8 @@ import React from "react";
 import { createRoot } from "react-dom/client"; // Import createRoot
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 // Find the root container
 const container = document.getElementById("root");

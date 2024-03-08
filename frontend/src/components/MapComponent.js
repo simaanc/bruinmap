@@ -11,8 +11,53 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
-import polylabel from '@mapbox/polylabel';
+import polylabel from "@mapbox/polylabel";
 
+const calculatePolygonPixelBounds = (map, positions) => {
+  const points = positions.map((pos) => map.latLngToLayerPoint(L.latLng(pos)));
+  const xValues = points.map((p) => p.x);
+  const yValues = points.map((p) => p.y);
+  const minX = Math.min(...xValues);
+  const maxX = Math.max(...xValues);
+  const minY = Math.min(...yValues);
+  const maxY = Math.max(...yValues);
+  return { width: maxX - minX, height: maxY - minY };
+};
+
+const DivIcon = ({ positions, text, isVisible, onIconClick }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!isVisible || !positions || positions.length === 0) {
+      return;
+    }
+
+    // Use the external calculatePolygonPixelBounds function.
+    const polygonBounds = calculatePolygonPixelBounds(map, positions);
+    const center = calculateCenter(positions);
+
+    const iconHtml = `<div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; background: transparent; border: none; font-size: 12px; text-align: center;">${text}</div>`;
+    const icon = L.divIcon({
+      html: iconHtml,
+      className: 'custom-div-icon', // Ensure this class is defined in your CSS
+    });
+
+    const marker = L.marker(center, { icon }).addTo(map);
+
+    if (onIconClick) {
+      marker.on('click', onIconClick);
+    }
+
+    return () => {
+      marker.off('click', onIconClick);
+      marker.remove();
+    };
+  }, [map, positions, text, isVisible, onIconClick]);
+
+  return null;
+};
+
+// Calculate the geographic center of a set of positions (ensure this function is defined or imported if it's moved outside too).
 
 const calculateCenter = (coords) => {
   // Guard clause to handle undefined or empty coords array
@@ -29,80 +74,6 @@ const calculateCenter = (coords) => {
   const avgLng = longitudes.reduce((a, b) => a + b, 0) / longitudes.length;
   return [avgLat, avgLng];
 };
-const DivIcon = ({ positions, text, isVisible, onIconClick }) => {
-  const map = useMap();
-
-  // Memoize calculatePolygonPixelBounds using useCallback
-  const calculatePolygonPixelBounds = useCallback(() => {
-    const points = positions.map((pos) =>
-      map.latLngToLayerPoint(L.latLng(pos))
-    );
-    const xValues = points.map((p) => p.x);
-    const yValues = points.map((p) => p.y);
-    const minX = Math.min(...xValues);
-    const maxX = Math.max(...xValues);
-    const minY = Math.min(...yValues);
-    const maxY = Math.max(...yValues);
-    return { width: maxX - minX, height: maxY - minY };
-  }, [map, positions]); // Dependencies are map and positions, as they're used within the function.
-
-  useEffect(() => {
-    let label = null;
-
-    const center = calculateCenter(positions);
-    const polygonBounds = calculatePolygonPixelBounds();
-
-    const createOrUpdateLabel = () => {
-      if (isVisible) {
-        if (!label) {
-          const icon = L.divIcon({
-            className: "custom-div-icon",
-            html: `<div style="display: flex; justify-content: center; align-items: center; width: ${
-              polygonBounds.width
-            }px; height: ${
-              polygonBounds.height / 5
-            }px; background: transparent; border: none; font-size: 12px; text-align: center;">${text}</div>`,
-            iconSize: [polygonBounds.width, polygonBounds.height / 5],
-          });
-
-          label = L.marker(center, { icon }).addTo(map);
-
-          // Attach a click event listener to the icon
-          L.DomEvent.on(label._icon, "click", (e) => {
-            e.stopPropagation();
-            if (onIconClick) onIconClick(); // Use the passed onIconClick function
-          });
-        }
-      } else if (label) {
-        // Remove the event listener when the component is not visible or being removed
-        L.DomEvent.off(label._icon, "click");
-        label.remove();
-        label = null;
-      }
-    };
-
-    createOrUpdateLabel();
-
-    map.on("zoomend", createOrUpdateLabel);
-
-    return () => {
-      if (label) {
-        L.DomEvent.off(label._icon, "click");
-        label.remove();
-      }
-      map.off("zoomend", createOrUpdateLabel);
-    };
-  }, [
-    map,
-    positions,
-    text,
-    isVisible,
-    calculatePolygonPixelBounds,
-    onIconClick,
-  ]);
-
-  return null;
-};
 
 const roomStyle = {
   color: "blue",
@@ -118,54 +89,93 @@ const buildingStyle = {
   weight: 1,
 };
 
+function useThemeDetector() {
+  const [theme, setTheme] = useState('dark'); // Default to dark
+
+  useEffect(() => {
+    const matchDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = ({ matches }) => setTheme(matches ? 'dark' : 'light');
+    
+    matchDarkMode.addEventListener('change', handleChange);
+    // Set initial theme
+    handleChange(matchDarkMode);
+
+    return () => matchDarkMode.removeEventListener('change', handleChange);
+  }, []);
+
+  return theme;
+}
+
+
 // Abstracted custom hook for fetching building data
 function useBuildingData() {
   const [buildingData, setBuildingData] = useState([]);
 
   useEffect(() => {
+    let isSubscribed = true; // Flag to prevent updates if the component unmounts
+
     async function fetchBuildingData() {
       try {
         const response = await axios.get("http://localhost:5000/buildings");
-        setBuildingData(response.data);
+        if (isSubscribed) {
+          // Only update state if the component is still mounted
+          setBuildingData(response.data);
+        }
       } catch (error) {
         console.error("Failed to fetch building data:", error);
       }
     }
+
     fetchBuildingData();
+
+    return () => {
+      isSubscribed = false; // Set flag to false when the component unmounts
+    };
   }, []);
 
   return buildingData;
 }
 
-// Floor Selector Component
-const FloorSelector = ({ selectedBuilding, selectedFloor, onChange }) => (
-  <div style={floorSelectorStyle}>
-    <select onChange={onChange} value={selectedFloor} style={selectStyle}>
-      {selectedBuilding.floors.map((floor, index) => (
-        <option key={index} value={floor.name}>
-          {floor.name}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+const FloorSelector = ({ selectedBuilding, selectedFloor, onChange }) => {
+  const theme = useThemeDetector(); // Use the hook within the component
+  
+  // Define getThemeStyle function within the component or make it accept `theme` as a parameter
+  const getThemeStyle = (darkStyle, lightStyle) => theme === 'dark' ? darkStyle : lightStyle;
 
-// Abstract styles
-const floorSelectorStyle = {
-  position: "absolute",
-  zIndex: 1000,
-  background: "white",
-  padding: "10px",
-  top: "70px", // Adjust based on the actual height of the Search Bar + desired margin
-  right: "10px",
-  borderRadius: "5px",
-  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+  // Now, you can safely use `getThemeStyle` within your component
+  const floorSelectorStyle = {
+    position: "absolute",
+    zIndex: 1000,
+    background: theme === 'dark' ? "#212529" : "white", // Bootstrap dark background
+    padding: "10px",
+    top: "121px",
+    right: "10px",
+    borderRadius: "10px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+    color: theme === 'dark' ? "#f8f9fa" : "black", // Bootstrap dark text
+  };
+
+  const selectStyle = {
+    padding: "5px",
+    borderRadius: "5px",
+    background: theme === 'dark' ? "#343a40" : "white", // Slightly lighter dark background for contrast
+    color: theme === 'dark' ? "#f8f9fa" : "black", // Bootstrap dark text
+    border: getThemeStyle("1px solid #888", "1px solid #ccc")
+  };
+
+  return (
+    <div style={floorSelectorStyle}>
+      <select onChange={onChange} value={selectedFloor} style={selectStyle}>
+        {selectedBuilding.floors.map((floor, index) => (
+          <option key={index} value={floor.name}>
+            {floor.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 };
 
-const selectStyle = {
-  padding: "5px",
-  borderRadius: "5px",
-};
 
 // Building Polygons Component
 const BuildingPolygons = ({
@@ -286,6 +296,38 @@ function MapClickLogger() {
 // Search Bar Component
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const theme = useThemeDetector(); // Use theme detector within the component
+
+  // Define theme-aware styles within the component
+  const searchBarStyle = {
+    position: "absolute",
+    zIndex: 1000,
+    background: theme === 'dark' ? "#212529" : "white", // Bootstrap dark background
+    padding: "10px",
+    top: "61px", // Adjust this value so it's positioned below the Floor Selector
+    right: "10px",
+    borderRadius: "10px",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+    color: theme === 'dark' ? "white" : "black"
+  };
+
+  const searchInputStyle = {
+    padding: "5px",
+    borderRadius: "5px",
+    
+    border: theme === 'dark' ? "1px solid #888" : "1px solid #ccc",
+    marginRight: "5px",
+    color: "black",
+  };
+
+  const searchButtonStyle = {
+    padding: "5px 10px",
+    borderRadius: "5px",
+    backgroundColor: theme === 'dark' ? "#4CAF50" : "#4CAF50",
+    color: "white",
+    border: "none",
+    cursor: "pointer"
+  };
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -312,33 +354,6 @@ const SearchBar = ({ onSearch }) => {
       </form>
     </div>
   );
-};
-
-// Search Bar Styles
-const searchBarStyle = {
-  position: "absolute",
-  zIndex: 1000,
-  background: "white",
-  padding: "10px",
-  top: "10px",
-  right: "10px",
-  borderRadius: "5px",
-  boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-};
-
-const searchInputStyle = {
-  padding: "5px",
-  borderRadius: "5px",
-  border: "1px solid #ccc",
-};
-
-const searchButtonStyle = {
-  padding: "5px 10px",
-  borderRadius: "5px",
-  backgroundColor: "#4CAF50",
-  color: "white",
-  border: "none",
-  cursor: "pointer",
 };
 
 const MouseCoordinateDisplay = () => {
@@ -456,6 +471,27 @@ const MapComponent = () => {
     },
     [selectedBuilding]
   );
+
+  useEffect(() => {
+    if (mapRef.current) {
+      const map = mapRef.current;
+
+      // Define the event handler function
+      const onZoomEnd = () => {
+        const newZoomLevel = map.getZoom();
+        setZoomLevel(newZoomLevel);
+        console.log("Current zoom level:", newZoomLevel);
+      };
+
+      // Attach event listener
+      map.on("zoomend", onZoomEnd);
+
+      // Cleanup function to remove event listener
+      return () => {
+        map.off("zoomend", onZoomEnd);
+      };
+    }
+  }, [mapRef]); // useEffect dependency on mapRef
 
   return (
     <div style={{ display: "flex", height: "99vh" }}>

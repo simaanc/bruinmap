@@ -2,7 +2,7 @@ import React from 'react';
 import  { Navigate } from "react-router-dom"
 // import { useContext } from "react"
 // import { Context } from "../../Context/AuthContext"
-import {UserAuth} from '../../Context/AuthContext';
+import {useAuth} from '../../context/AuthContext';
 
 // export function Protected({children}) {
 //   const {user} = useContext(Context);
@@ -17,11 +17,10 @@ import {UserAuth} from '../../Context/AuthContext';
 
 
 const ProtectedRoute = ({children}) => {
-  const {user} = UserAuth();
-  // const navigate = useNavigate();
+  const {user} = useAuth();
   if(!user) {
-    // return navigate('/Home')
-    return <Navigate to='/Home' />
+    console.log("Redirecting to /Home due to lack of authentication.");
+    return <Navigate to='/Home' />;
   }
   return children;
 };

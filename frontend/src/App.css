@@ -61,6 +61,18 @@
   padding: 4px 8px;
 }
 
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 100% of the viewport height */
+  overflow: hidden; /* Prevent scrolling within this container */
+}
+
+.map-container {
+  flex-grow: 1; /* Allows the map to expand and fill available space */
+  overflow: hidden; /* Prevent the map itself from causing scrollbars */
+}
+
 @keyframes App-logo-spin {
 	from {
 		transform: rotate(0deg);
