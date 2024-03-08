@@ -35,7 +35,8 @@
 
 .room-label {
   background-color: transparent;
-  border: none;
+  border:
+  none;
   box-shadow: none;
   font-weight: bold;
 }
@@ -52,11 +53,19 @@
   font-size: 14px; /* Adjust font size as needed */
 }
 
+.custom-tooltip {
+/* Example CSS based on your desired tooltip appearance */
+  background-color: white;
+  color: #333;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
