@@ -12,7 +12,6 @@ app.use(cors());
 app.use(express.json()); // For parsing application/json
 app.use('/buildings', buildingsRouter);
 
-const uri = 'mongodb+srv://bruinmap:XdyUjBfGMrhEnztw@bruinmap.irgoxrb.mongodb.net';
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const connection = mongoose.connection;
