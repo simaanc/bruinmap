@@ -5,7 +5,7 @@ import { useAuth } from "../Context/AuthContext";
 import logo from "../Assets/icon.jpg"; // Adjust the path as necessary
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faSearch, faStepBackward, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faStepBackward, faUser } from '@fortawesome/free-solid-svg-icons';
 //import "animate.css";
 import "../App.css";
 
@@ -174,60 +174,56 @@ const UnifiedNavbar = () => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <div class="container">
-
-          <button
-            data-mdb-collapse-init
-            class="navbar-toggler"
-            type="button"
-            data-mdb-target="#navbarButtonsExample"
-            aria-controls="navbarButtonsExample"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <i class="fas fa-bars"></i>
-          </button>
 
 
-          <div class="collapse navbar-collapse" id="navbarButtonsExample" >
-            
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
-                <li class="nav-item">
-                  <a class="nav-link" href="#" >Events</a> {/* We could put a general list of events that users can see even when logged out */}
-                </li>
-              </ul>
+        <button
+          data-mdb-collapse-init
+          class="navbar-toggler"
+          type="button"
+          data-mdb-target="#navbarButtonsExample"
+          aria-controls="navbarButtonsExample"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          style={{ marginRight: '20px' }}
+        >
+          <FontAwesomeIcon icon={faBars} style={{ color: "white", padding: "4px" }} />
+        </button>
 
 
-              <nav class="navbar navbar-dark" >
-                <div class="container-fluid">
-                  <button style={{ backgroundColor: "#0a87ca", borderColor: "#024b76", borderWidth: '1.5px', boxShadow: "0 0 5px #0a87ca", padding: "10px", margin: "8px" }} class="input-group-text border-0" id="search-addon">
-                    <FontAwesomeIcon icon = {faSearch} style={{ color: "white" }} />
-                  </button>
-                  <form class="d-flex input-group w-auto">
-                    <input
-                      type="search"
-                      class="form-control rounded"
-                      placeholder={placeholder}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                      aria-label="Search"
-                      aria-describedby="search-addon"
-                      style={{ backgroundColor: '#f1f2f3', width: '300px' }}
-                    />
+        <div class="collapse navbar-collapse" id="navbarButtonsExample" >
 
-                  </form>
-                </div>
-              </nav>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
+            <li class="nav-item">
+              <a class="nav-link" href="#" style={{marginLeft: "20px"}}>Events</a> {/* We could put a general list of events that users can see even when logged out */}
+            </li>
+          </ul>
 
-              
-              <button class="input-group-text border-0" onClick={() => { window.location.href = "https://github.com/simaanc/bruinmap"; }} style={{ backgroundColor: "black", color: "white", borderWidth: '1.5px', padding: "10px", margin: "8px"}}>
-                <FontAwesomeIcon icon={faGithub} />
-              </button> 
+          <span style={{ marginRight: "0px" }}>
+            <nav class="navbar navbar-dark">
+              <span class="container-fluid">
+                <button style={{ backgroundColor: "#0a87ca", borderColor: "#024b76", borderWidth: '1.5px', boxShadow: "0 0 5px #0a87ca", padding: "10px", margin: "8px" }} class="input-group-text border-0" id="search-addon">
+                  <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
+                </button>
+                <form class="d-flex input-group w-auto">
+                  <input
+                    type="search"
+                    class="form-control rounded"
+                    placeholder={placeholder}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                    style={{ backgroundColor: '#f1f2f3', width: '300px' }}
+                  />
+                </form>
+                <button class="input-group-text border-0" onClick={() => { window.location.href = "https://github.com/simaanc/bruinmap"; }} style={{ backgroundColor: "black", color: "white", borderWidth: '1.5px', padding: "12px", margin: "8px" }}>
+                  <FontAwesomeIcon icon={faGithub} />
+                </button>
+              </span>
+            </nav>
+          </span>
 
-              
 
-            </div>
-          
         </div>
 
       </nav>
