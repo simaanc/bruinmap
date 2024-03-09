@@ -2,7 +2,7 @@ import React from 'react';
 import  { Navigate } from "react-router-dom"
 // import { useContext } from "react"
 // import { Context } from "../../Context/AuthContext"
-import {useAuth} from '../../context/AuthContext';
+import {useAuth} from '../../Context/AuthContext';
 
 // export function Protected({children}) {
 //   const {user} = useContext(Context);

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Container, Row, Col, Button, Form, Dropdown, FormControl } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Context/AuthContext";
 import logo from "../Assets/icon.jpg"; // Adjust the path as necessary
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStepBackward, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faSearch, faStepBackward, faUser } from '@fortawesome/free-solid-svg-icons';
 //import "animate.css";
 import "../App.css";
+
 
 const UnifiedNavbar = () => {
   const { user, signIn, logout, createUser, resetPassword } = useAuth();
@@ -33,10 +35,12 @@ const UnifiedNavbar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+
     if (!email || !password) {
       triggerShakeAnimation();
       return;
     }
+
 
     // Attempt to sign in or sign up
     try {
@@ -79,6 +83,7 @@ const UnifiedNavbar = () => {
       console.error("Password reset error:", error);
     }
   };
+
 
   const buttonStyle = email && password
     ? { backgroundColor: '#0a87ca' } // Blue background when both fields are filled
@@ -184,51 +189,45 @@ const UnifiedNavbar = () => {
           </button>
 
 
-          <div class="collapse navbar-collapse" id="navbarButtonsExample">
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" href="#" >Events</a> {/* We could put a general list of events that users can see even when logged out */}
-              </li>
-            </ul>
-
-
-            <nav class="navbar navbar-dark">
-              <div class="container-fluid">
-              <span style={{backgroundColor: "black", margin: "8px"}} class="input-group-text border-0" id="search-addon">
-                  <i class="fas fa-search" aria-hidden="true"></i>
-                </span>
-                <form class ="d-flex input-group w-auto">
-                  <input 
-                    type="search"
-                    class="form-control rounded"
-                    placeholder={placeholder}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    aria-label="Search"
-                    aria-describedby="search-addon"
-                    style={{backgroundColor: '#f1f2f3', width: '300px' }}
-                  />
-
-                </form>
-              </div>
-            </nav>
+          <div class="collapse navbar-collapse" id="navbarButtonsExample" >
+            
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
+                <li class="nav-item">
+                  <a class="nav-link" href="#" >Events</a> {/* We could put a general list of events that users can see even when logged out */}
+                </li>
+              </ul>
 
 
+              <nav class="navbar navbar-dark" >
+                <div class="container-fluid">
+                  <button style={{ backgroundColor: "#0a87ca", borderColor: "#024b76", borderWidth: '1.5px', boxShadow: "0 0 5px #0a87ca", padding: "10px", margin: "8px" }} class="input-group-text border-0" id="search-addon">
+                    <FontAwesomeIcon icon = {faSearch} style={{ color: "white" }} />
+                  </button>
+                  <form class="d-flex input-group w-auto">
+                    <input
+                      type="search"
+                      class="form-control rounded"
+                      placeholder={placeholder}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      aria-label="Search"
+                      aria-describedby="search-addon"
+                      style={{ backgroundColor: '#f1f2f3', width: '300px' }}
+                    />
 
-            <a
-              data-mdb-ripple-init
-              class="btn px-3"
-              href="https://github.com/simaanc/bruinmap"
-              role="button"
-              style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: "black" }} // Adjust padding and font size as needed
-            >
-              <i class="fab fa-github"></i>
-            </a>
+                  </form>
+                </div>
+              </nav>
 
+              
+              <button class="input-group-text border-0" onClick={() => { window.location.href = "https://github.com/simaanc/bruinmap"; }} style={{ backgroundColor: "black", color: "white", borderWidth: '1.5px', padding: "10px", margin: "8px"}}>
+                <FontAwesomeIcon icon={faGithub} />
+              </button> 
 
-          </div>
+              
 
+            </div>
+          
         </div>
 
       </nav>
@@ -236,6 +235,7 @@ const UnifiedNavbar = () => {
     </div>
   );
 }
+export default UnifiedNavbar;
 {/* return (
   <Navbar
     bg={theme}
@@ -315,5 +315,4 @@ const UnifiedNavbar = () => {
   </Navbar>
 );
 };
-*/}
-export default UnifiedNavbar;
+export default UnifiedNavbar;*/}
