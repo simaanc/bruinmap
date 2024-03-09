@@ -81,3 +81,12 @@
 		transform: rotate(360deg);
 	}
 }
+
+/* Stuff for Navbar.js */
+.sign-in-button {
+  margin-top: 8px;
+  margin-left: 32px;
+  margin-right: 32px;
+  color: #024b76;
+  border-color: #024b76;
+}
