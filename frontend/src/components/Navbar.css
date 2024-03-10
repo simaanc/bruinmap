@@ -1,4 +1,16 @@
 /* Stuff for Navbar.js */
+.navbar {
+    background: #1c1e21;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
 .bruinmap-logo {
     margin-left: 16px;
     box-shadow: 0 0 5px #0a87ca;
@@ -22,21 +34,22 @@
 
 /* Entire sidebar menu */
 .sidebar-menu {
-    background-color: #ffffff;
-    width: 250px;
-    height: 100vh;
     display: flex;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    bottom: 0;
+    flex-direction: column;
+    width: 200px;
+    position: absolute;
+    top: 90px;
     right: -100%;
+    opacity: 1;
     transition: 850ms;
 }
 
 .sidebar-menu.active {
+    background: #1c1e21;
     right: 0;
-    transition: 350ms;
+    opacity: 1;
+    transition: all 0.6s ease;
+    z-index: 1;
 }
 
 .sidebar-text {
@@ -61,22 +74,20 @@
 }
 
 .sidebar-text a:hover {
-    background-color: #1a83ff; 
+    background-color: #0a87ca; 
 }
 
 .sidebar-menu-items {
     width: 100%;
 }
 
-.sidebar-toggle {
-    background-color: blue;
-    width: 100%;
-    height: 80px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-}
+/*.sidebar-toggle {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 60%);
+    font-size: 1.8rem;
+    cursor: pointer;
+}*/
 
-span {
-    margin-left: 16px;
-}

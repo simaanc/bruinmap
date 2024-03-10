@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Col, Button, Form, Dropdown, FormControl } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import logo from "../Assets/icon.jpg"; // Adjust the path as necessary
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,9 +8,10 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faBars, faSearch, faStepBackward, faUser, faX } from '@fortawesome/free-solid-svg-icons';
 //import "animate.css";
 import "./Navbar.css";
+import { SidebarData } from "./SidebarData.js";
 
 
-const Navbar = ({ sidebar, showSidebar }) => {
+const Navbar = () => {
   // States
   const { user, signIn, logout, createUser, resetPassword } = useAuth();
   const navigate = useNavigate();
@@ -27,6 +28,10 @@ const Navbar = ({ sidebar, showSidebar }) => {
   const [placeholder, setPlaceholder] = useState('Search');
   const handleFocus = () => setPlaceholder('Enter room # or building...');
   const handleBlur = () => setPlaceholder('Search');
+
+  // For the sidebar
+  const [sidebar, setSidebar] = useState(false);
+  const showSidebar = () => setSidebar(!sidebar);
 
   const triggerShakeAnimation = () => {
     setInputClass("animate__animated animate__shakeX");
@@ -96,7 +101,7 @@ const Navbar = ({ sidebar, showSidebar }) => {
   return (
     <>
     <div>
-      <nav class="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#1c1e21' }} >
+      <nav class="navbar navbar-expand-lg navbar-dark">
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           {/* Logo at the top left */}
           <a class="navbar-brand me-2 bruinmap-logo">
@@ -196,6 +201,18 @@ const Navbar = ({ sidebar, showSidebar }) => {
             : <FontAwesomeIcon icon={faBars} style={{ color: "white", padding: "4px" }} />
           }  
         </button>
+        <ul className={sidebar ? "sidebar-menu active" : "sidebar-menu"}>
+          {SidebarData.map((item, index) => {
+            return (
+              <li key={index} className={item.cName}>
+                <Link to={item.path}>
+                  {item.icon}
+                  <span>{item.title}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
 
         {/* Events */}
         <div class="collapse navbar-collapse" id="navbarButtonsExample" >
