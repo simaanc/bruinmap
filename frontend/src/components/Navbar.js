@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Container, Row, Col, Button, Form, Dropdown, FormControl } from 'react-bootstrap';
+import { Col, Button, Form, Dropdown, FormControl } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import logo from "../Assets/icon.jpg"; // Adjust the path as necessary
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faBars, faSearch, faStepBackward, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faStepBackward, faUser, faX } from '@fortawesome/free-solid-svg-icons';
 //import "animate.css";
-import "../App.css";
+import "./Navbar.css";
 
 
-const UnifiedNavbar = () => {
+const Navbar = ({ sidebar, showSidebar }) => {
+  // States
   const { user, signIn, logout, createUser, resetPassword } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -18,6 +19,14 @@ const UnifiedNavbar = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [theme, setTheme] = useState("dark"); // Default to dark theme
   const [inputClass, setInputClass] = useState(""); // State for input classes
+  const buttonStyle = email && password // For the "Sign In" button
+    ? { backgroundColor: '#0a87ca' } // Blue background when both fields are filled
+    : { backGroundColor: 'grey' }; // Grey background when either field is empty
+  
+  // For the search bar
+  const [placeholder, setPlaceholder] = useState('Search');
+  const handleFocus = () => setPlaceholder('Enter room # or building...');
+  const handleBlur = () => setPlaceholder('Search');
 
   const triggerShakeAnimation = () => {
     setInputClass("animate__animated animate__shakeX");
@@ -84,20 +93,13 @@ const UnifiedNavbar = () => {
     }
   };
 
-
-  const buttonStyle = email && password
-    ? { backgroundColor: '#0a87ca' } // Blue background when both fields are filled
-    : { backGroundColor: 'grey' }; // Grey background when either field is empty
-  const [placeholder, setPlaceholder] = useState('Search');
-  const handleFocus = () => setPlaceholder('Enter room # or building...');
-  const handleBlur = () => setPlaceholder('Search');
   return (
+    <>
     <div>
-
       <nav class="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#1c1e21' }} >
-
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <a class="navbar-brand me-2" style={{ marginLeft: "16px", boxShadow: "0 0 5px #0a87ca", borderRadius: "10px", backgroundColor: "#232629" }}>
+          {/* Logo at the top left */}
+          <a class="navbar-brand me-2 bruinmap-logo">
             <img
               src="https://i.imgur.com/pSTs7Pe.png"
               height="64"
@@ -105,6 +107,7 @@ const UnifiedNavbar = () => {
               loading="lazy"
             />
           </a>
+
           {/* Simple Dropdown Menu */}
           <Dropdown>
             <Dropdown.Toggle
@@ -118,7 +121,7 @@ const UnifiedNavbar = () => {
               }
             </Dropdown.Toggle>
 
-            <Dropdown.Menu style={{ padding: '4px', minWidth: '200px' }}>
+            <Dropdown.Menu style={{ padding: '4px', width: '200px' }}>
               {user
                 ? <>
                   {/* Menu items for when user is signed in */}
@@ -162,153 +165,89 @@ const UnifiedNavbar = () => {
                         onClick={handleSubmit}
                         style={{ ...buttonStyle }}
                         disabled={!email || !password} // Disables the button if either field is empty
-                      >
-                        Sign In
+                        >Sign In
                       </Button>
                     </Col>
                   </div>
                   {/* Forgot password */}
-                  <Dropdown.Item onClick={handleResetPassword} style={{ color: 'grey', textAlign: 'center', display: 'block' }}>Forgot Password?</Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={handleResetPassword}
+                    style={{ color: 'grey', textAlign: 'center', display: 'block' }}>
+                      Forgot Password?
+                  </Dropdown.Item>
                 </>
               }
             </Dropdown.Menu>
           </Dropdown>
         </div>
 
-
+        {/* Sidebar open button */}
         <button
           data-mdb-collapse-init
-          class="navbar-toggler"
+          class="navbar-toggler sidebar-button"
           type="button"
           data-mdb-target="#navbarButtonsExample"
           aria-controls="navbarButtonsExample"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          style={{ marginRight: '20px' }}
-        >
-          <FontAwesomeIcon icon={faBars} style={{ color: "white", padding: "4px" }} />
+          onClick={showSidebar}>
+          {sidebar
+            ? <FontAwesomeIcon icon={faX} style={{ color: "white", padding: "4px" }} />
+            : <FontAwesomeIcon icon={faBars} style={{ color: "white", padding: "4px" }} />
+          }  
         </button>
 
-
+        {/* Events */}
         <div class="collapse navbar-collapse" id="navbarButtonsExample" >
-
           <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
             <li class="nav-item">
               <a class="nav-link" href="#" style={{marginLeft: "20px"}}>Events</a> {/* We could put a general list of events that users can see even when logged out */}
             </li>
           </ul>
 
-          <span style={{ marginRight: "0px" }}>
-            <nav class="navbar navbar-dark">
-              <span class="container-fluid">
-                <button style={{ backgroundColor: "#0a87ca", borderColor: "#024b76", borderWidth: '1.5px', boxShadow: "0 0 5px #0a87ca", padding: "10px", margin: "8px" }} class="input-group-text border-0" id="search-addon">
-                  <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
-                </button>
-                <form class="d-flex input-group w-auto">
-                  <input
-                    type="search"
-                    class="form-control rounded"
-                    placeholder={placeholder}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    aria-label="Search"
-                    aria-describedby="search-addon"
-                    style={{ backgroundColor: '#f1f2f3', width: '300px' }}
-                  />
-                </form>
-                <button class="input-group-text border-0" onClick={() => { window.location.href = "https://github.com/simaanc/bruinmap"; }} style={{ backgroundColor: "black", color: "white", borderWidth: '1.5px', padding: "12px", margin: "8px" }}>
-                  <FontAwesomeIcon icon={faGithub} />
-                </button>
-              </span>
-            </nav>
-          </span>
+        {/* Search bar and search icon */}
+        <span style={{ marginRight: "0px" }}>
+          <nav class="navbar navbar-dark">
+            <span class="container-fluid">
+              <button
+                style={{
+                  backgroundColor: "#0a87ca",
+                  borderColor: "#024b76",
+                  borderWidth: '1.5px',
+                  boxShadow: "0 0 5px #0a87ca",
+                  padding: "10px", margin: "8px" }}
+                class="input-group-text border-0"
+                id="search-addon">
+                <FontAwesomeIcon icon={faSearch} style={{ color: "white" }} />
+              </button>
+              <form class="d-flex input-group w-auto">
+                <input
+                  type="search"
+                  class="form-control rounded"
+                  placeholder={placeholder}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  aria-label="Search"
+                  aria-describedby="search-addon"
+                  style={{ backgroundColor: '#f1f2f3', width: '300px' }}
+                />
+              </form>
 
-
+              {/* GitHub button */}
+              <button
+                class="input-group-text border-0"
+                onClick={() => { window.location.href = "https://github.com/simaanc/bruinmap"; }}
+                style={{ backgroundColor: "black", color: "white", borderWidth: '1.5px', padding: "12px", margin: "8px" }}>
+                <FontAwesomeIcon icon={faGithub} />
+              </button>
+            </span>
+          </nav>
+        </span>
         </div>
-
       </nav>
-
     </div>
+    
+    </>
   );
 }
-export default UnifiedNavbar;
-{/* return (
-  <Navbar
-    bg={theme}
-    expand="lg"
-    variant={theme}
-    className="py-2" // Adjust padding here 
-  >
-    <Container fluid>
-      <Navbar.Brand onClick={() => navigate("/")}>
-        <img
-          src={logo}
-          alt="Logo"
-          width="30"
-          height="30"
-          className="d-inline-block align-top"
-        />
-        My App
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="me-auto">
-          <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
-          {user && (
-            <Nav.Link onClick={() => navigate("/events")}>Events</Nav.Link>
-          )}
-        </Nav>
-        <Form inline="true" className="ml-auto" onSubmit={handleSubmit}>
-          {!user ? (
-            <Row className="align-items-center">
-              <Col xs="auto">
-                <FormControl
-                  type="email"
-                  placeholder="Email"
-                  className={`mr-sm-2 ${inputClass}`} // Apply the inputClass here
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  autoComplete="email"
-                />
-              </Col>
-              <Col xs="auto">
-                <FormControl
-                  type="password"
-                  placeholder="Password"
-                  className={`mr-sm-2 ${inputClass}`} // And here
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                />
-              </Col>
-              <Col xs="auto">
-                <Button
-                  type="submit"
-                  variant={
-                    isSigningUp ? "outline-primary" : "outline-success"
-                  }>
-                  {isSigningUp ? "Sign Up" : "Sign In"}
-                </Button>
-              </Col>
-              <Col xs="auto">
-                <Button
-                  type="button"
-                  variant="outline-secondary"
-                  onClick={handleResetPassword}
-                  className="ms-2">
-                  Forgot Password?
-                </Button>
-              </Col>
-            </Row>
-          ) : (
-            <Button variant="outline-danger" onClick={handleSignOut}>
-              Sign Out
-            </Button>
-          )}
-        </Form>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
-);
-};
-export default UnifiedNavbar;*/}
+export default Navbar;
