@@ -42,6 +42,8 @@
     right: -100%;
     opacity: 1;
     transition: 850ms;
+    padding: 0px;
+    border-bottom-left-radius: 8px;
 }
 
 .sidebar-menu.active {
@@ -91,3 +93,6 @@
     cursor: pointer;
 }*/
 
+span {
+    margin-left: 16px;
+}
