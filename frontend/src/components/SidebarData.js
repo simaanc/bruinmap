@@ -32,6 +32,7 @@ export const SidebarData = [
 		protected: false,
 	},
 	{
+		title: "GitHub",
 		type: "gitHubButton",
 	},
 ];

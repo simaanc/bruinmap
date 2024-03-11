@@ -6,6 +6,11 @@ import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
 const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
+
+	const handleSearchBarClick = (event) => {
+        event.stopPropagation();
+    };
+
 	return (
 		<div>
 			{/* Sidebar */}
@@ -17,7 +22,7 @@ const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 							if (item.type === "searchBar") {
 								// Render the SearchBar component for this special case
 								return (
-									<li key={index} className="sidebar-item">
+									<li key={index} className="sidebar-item" onClick={handleSearchBarClick}> 
 										<SearchBar />
 									</li>
 								);

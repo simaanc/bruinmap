@@ -172,6 +172,10 @@ const Navbar = () => {
 							</span>
 						</div>
 					)}
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/navBar
 				</nav>
 			</div>
 		</>
