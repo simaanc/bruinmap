@@ -134,13 +134,14 @@ const FloorSelector = ({ selectedBuilding, selectedFloor, onChange }) => {
 	const floorSelectorStyle = {
 		position: "absolute",
 		zIndex: 1000,
-		background: theme === "dark" ? "#212529" : "white", // Bootstrap dark background
+		background: theme === "dark" ? "#212529" : "white",
 		padding: "10px",
-		top: "121px",
-		right: "10px",
+		bottom: "10px", // Adjust this value as needed
+		right: "50px",
 		borderRadius: "10px",
 		boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-		color: theme === "dark" ? "#f8f9fa" : "black", // Bootstrap dark text
+		color: theme === "dark" ? "#f8f9fa" : "black",
+		transform: "translateY(0%)", // Initialize transform property
 	};
 
 	const selectStyle = {

@@ -4,12 +4,12 @@ import "./Sidebar.css";
 import { SidebarData } from "./SidebarData";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import GitHubButton from "./GitHubButton";
 
 const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
-
 	const handleSearchBarClick = (event) => {
-        event.stopPropagation();
-    };
+		event.stopPropagation();
+	};
 
 	return (
 		<div>
@@ -22,7 +22,11 @@ const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 							if (item.type === "searchBar") {
 								// Render the SearchBar component for this special case
 								return (
-									<li key={index} className="sidebar-item" onClick={handleSearchBarClick}> 
+									<li
+										key={index}
+										className="sidebar-item"
+										onClick={handleSearchBarClick}
+									>
 										<SearchBar />
 									</li>
 								);

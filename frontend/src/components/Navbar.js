@@ -22,6 +22,9 @@ const Navbar = () => {
 	const [password, setPassword] = useState("");
 	const [isSigningUp, setIsSigningUp] = useState(false);
 	const [inputClass, setInputClass] = useState(""); // State for input classes
+
+	const [showEventsSidebar, setShowEventsSidebar] = useState(false);
+
 	const buttonStyle =
 		email && password // For the "Sign In" button
 			? { backgroundColor: "#0a87ca" } // Blue background when both fields are filled
@@ -86,6 +89,10 @@ const Navbar = () => {
 		} catch (error) {
 			console.error("Password reset error:", error);
 		}
+	};
+
+	const toggleEventsBar = () => {
+		setShowEventsSidebar(!showEventsSidebar);
 	};
 
 	return (
@@ -154,7 +161,12 @@ const Navbar = () => {
 						<div class="collapse navbar-collapse" id="navbarButtonsExample">
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
-									<a class="nav-link" href="#" style={{ marginLeft: "20px" }}>
+									<a
+										class="nav-link"
+										href="#"
+										style={{ marginLeft: "20px" }}
+										onClick={toggleEventsBar}
+									>
 										Events
 									</a>{" "}
 									{/* We could put a general list of events that users can see even when logged out */}
@@ -172,11 +184,8 @@ const Navbar = () => {
 							</span>
 						</div>
 					)}
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/origin/navBar
 				</nav>
+				{showEventsSidebar && <EventsSidePanel />}
 			</div>
 		</>
 	);

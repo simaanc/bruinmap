@@ -5,6 +5,8 @@ import {
 	faHome,
 	faCalendarDays,
 } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import "./Sidebar.css";
 
 export const SidebarData = [
 	{
@@ -33,6 +35,8 @@ export const SidebarData = [
 	},
 	{
 		title: "GitHub",
-		type: "gitHubButton",
+		icon: <FontAwesomeIcon icon={faGithub} style={{ margin: "8px" }} />,
+		cName: "sidebar-text",
+		protected: false,
 	},
 ];
