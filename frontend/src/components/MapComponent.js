@@ -11,8 +11,6 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
-import SearchBar from "./SearchBar";
-import polylabel from "@mapbox/polylabel";
 import EventMarker from "./EventMarker";
 import { eventMarkerData } from "./eventMarkerData";
 import { auth, db, firebaseConfig } from "../firebase.config";

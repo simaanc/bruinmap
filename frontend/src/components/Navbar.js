@@ -2,20 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Col, Button, Form, Dropdown, FormControl } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
-import logo from "../Assets/icon.jpg"; // Adjust the path as necessary
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-import {
-	faBars,
-	faSearch,
-	faStepBackward,
-	faUser,
-	faX,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 import BruinMapIcon from "../Assets/bruinmaplogo.svg";
 //import "animate.css";
 import "./Navbar.css";
-import { SidebarData } from "./SidebarData.js";
 import SearchBar from "./SearchBar";
 import GitHubButton from "./GitHubButton";
 import Sidebar from "./Sidebar.js";
@@ -38,6 +29,7 @@ const Navbar = () => {
 
 	// For the search bar
 	const [placeholder, setPlaceholder] = useState("Search");
+
 	const handleFocus = () => setPlaceholder("Enter room # or building...");
 	const handleBlur = () => setPlaceholder("Search");
 	const theme = useThemeDetector();
@@ -53,34 +45,27 @@ const Navbar = () => {
 		setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		if (!email || !password) {
-			triggerShakeAnimation();
-			return;
-		}
-
-		// Attempt to sign in or sign up
+	const handleLogin = async () => {
 		try {
-			if (isSigningUp) {
-				await createUser(email, password);
-			} else {
-				await signIn(email, password);
-			}
+			await signIn(email, password);
 			navigate("/");
 		} catch (error) {
-			console.error("Sign in error:", error); // Log the error for inspection
-			if (error.code === "auth/user-not-found") {
-				console.error("Sign in error: User not found", error);
-			} else if (error.code === "auth/invalid-credential") {
-				console.error("Sign in error: Invalid credentials", error);
-			} else {
-				console.error(isSigningUp ? "Sign up error:" : "Sign in error:", error);
-			}
-			triggerShakeAnimation(); // Trigger shake animation on error as well
+			console.error("Login error:", error);
+			triggerShakeAnimation(); // If you have an animation for errors
 		}
 	};
+
+	// Function to handle signup
+	const handleSignUp = async () => {
+		try {
+			await createUser(email, password);
+			navigate("/");
+		} catch (error) {
+			console.error("Signup error:", error);
+			triggerShakeAnimation(); // If you have an animation for errors
+		}
+	};
+
 	const handleSignOut = async () => {
 		try {
 			await logout();
@@ -106,23 +91,22 @@ const Navbar = () => {
 	return (
 		<>
 			<div>
-				<nav class="navbar navbar-expand-lg navbar-dark">
+				<nav className="navbar navbar-expand-lg navbar-dark">
 					<div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
 						{/* Logo at the top left */}
-						<a class="navbar-brand me-2 bruinmap-logo">
+						<Link to="/" className="navbar-brand me-2 bruinmap-logo">
 							<img
 								src={BruinMapIcon}
 								height="64"
 								alt="BruinMap Logo"
 								loading="lazy"
 							/>
-						</a>
+						</Link>
 
 						{/* Simple Dropdown Menu */}
 						<DropdownMenu
 							user={user}
 							handleSignOut={handleSignOut}
-							handleSubmit={handleSubmit}
 							handleResetPassword={handleResetPassword}
 							email={email}
 							setEmail={setEmail}
@@ -131,13 +115,14 @@ const Navbar = () => {
 							inputClass={inputClass}
 							buttonStyle={buttonStyle}
 							isDarkTheme={theme}
+							handleLogin={handleLogin}
+							handleSignUp={handleSignUp}
 						/>
 					</div>
 
 					{/* Sidebar open button */}
 					<button
-						data-mdb-collapse-init
-						class="navbar-toggler sidebar-button"
+						class="sidebar-button"
 						type="button"
 						data-mdb-target="#navbarButtonsExample"
 						aria-controls="navbarButtonsExample"
@@ -165,27 +150,28 @@ const Navbar = () => {
 					/>
 
 					{/* Events */}
-					<div class="collapse navbar-collapse" id="navbarButtonsExample">
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							<li class="nav-item">
-								<a class="nav-link" href="#" style={{ marginLeft: "20px" }}>
-									Events
-								</a>{" "}
-								{/* We could put a general list of events that users can see even when logged out */}
-							</li>
-						</ul>
+					{!sidebar && (
+						<div class="collapse navbar-collapse" id="navbarButtonsExample">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+									<a class="nav-link" href="#" style={{ marginLeft: "20px" }}>
+										Events
+									</a>{" "}
+									{/* We could put a general list of events that users can see even when logged out */}
+								</li>
+							</ul>
 
-						{/* Search bar and search icon */}
-						<span style={{ marginRight: "0px" }}>
-							<nav class="navbar navbar-dark">
-								<span class="container-fluid">
-									<SearchBar />
-
-									<GitHubButton />
-								</span>
-							</nav>
-						</span>
-					</div>
+							{/* Search bar and search icon */}
+							<span style={{ marginRight: "0px" }}>
+								<nav class="navbar navbar-dark">
+									<span class="container-fluid">
+										<SearchBar />
+										<GitHubButton />
+									</span>
+								</nav>
+							</span>
+						</div>
+					)}
 				</nav>
 			</div>
 		</>

@@ -31,4 +31,7 @@ export const SidebarData = [
 		cName: "sidebar-text",
 		protected: false,
 	},
+	{
+		type: "gitHubButton",
+	},
 ];

@@ -16,7 +16,10 @@ export const AuthContextProvider = ({ children }) => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const userUid = userCredential.user.uid;
       const userDocRef = doc(db, 'users', userUid); // Assuming you have a 'users' collection
-      await setDoc(userDocRef, { email }); // You might want to add more details here
+      await setDoc(userDocRef, {
+        email,
+        events: [] // Empty events array
+      }); // You might want to add more details here
       setUser(userCredential.user);
     } catch (err) {
       setError(err.message);
@@ -77,7 +80,7 @@ export const AuthContextProvider = ({ children }) => {
   const isLoggedIn = !!user;
 
 
-  const value = { user, isLoggedIn, signIn, logout, loading, error, resetPassword };
+  const value = { user, isLoggedIn, signIn, logout, loading, error, createUser, resetPassword };
 
   return (
     <AuthContext.Provider value={value}>

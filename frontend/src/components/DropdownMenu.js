@@ -1,11 +1,9 @@
-// DropdownMenu.js
 import React, { useEffect } from "react";
-import { Button, Col, Dropdown, FormControl, Form } from "react-bootstrap";
+import { Button, Col, Dropdown, Form, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import "./Dropdown.css"; // Ensure this CSS file contains all the required classes
+import "./Dropdown.css";
 
-// Helper component for sign-in form fields
 const SignInField = ({
 	type,
 	placeholder,
@@ -29,7 +27,6 @@ const SignInField = ({
 const DropdownMenu = ({
 	user,
 	handleSignOut,
-	handleSubmit,
 	handleResetPassword,
 	email,
 	setEmail,
@@ -38,6 +35,8 @@ const DropdownMenu = ({
 	inputClass,
 	buttonStyle,
 	isDarkTheme,
+	handleLogin, // Passed from Navbar.js
+	handleSignUp, // Passed from Navbar.js
 }) => {
 	useEffect(() => {
 		// Function now sets class-based styling for placeholders
@@ -79,7 +78,11 @@ const DropdownMenu = ({
 						</Button>
 					</>
 				) : (
-					<Form inline={true} className="ml-auto" onSubmit={handleSubmit}>
+					<Form
+						inline={true}
+						className="ml-auto"
+						onSubmit={(e) => e.preventDefault()}
+					>
 						<SignInField
 							type="email"
 							placeholder="Email"
@@ -97,25 +100,17 @@ const DropdownMenu = ({
 							autoComplete="current-password"
 						/>
 						<Col xs="auto">
-							<div className="d-flex">
-								<Button
-									type="button"
-									variant="outline-success"
-									onClick={handleSubmit}
-									className="sign-in-button"
-									disabled={!email || !password}
-								>
-									Sign In
-								</Button>
-								<Button
-									type="button"
-									variant="outline-primary"
-									onClick={handleSubmit}
-									className="sign-up-button"
-								>
-									Sign Up
-								</Button>
-							</div>
+							<div className="d-flex"></div>
+							<Button
+								variant="outline-success"
+								className="mr-2"
+								onClick={handleLogin}
+							>
+								Log In
+							</Button>
+							<Button variant="outline-primary" onClick={handleSignUp}>
+								Sign Up
+							</Button>
 						</Col>
 						<Dropdown.Item
 							onClick={handleResetPassword}

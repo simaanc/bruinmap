@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Sidebar.css";
 import { SidebarData } from "./SidebarData";
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
