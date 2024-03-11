@@ -136,8 +136,7 @@ const Navbar = () => {
 
 					{/* Sidebar open button */}
 					<button
-						data-mdb-collapse-init
-						class="navbar-toggler sidebar-button"
+						class="sidebar-button"
 						type="button"
 						data-mdb-target="#navbarButtonsExample"
 						aria-controls="navbarButtonsExample"
@@ -165,27 +164,29 @@ const Navbar = () => {
 					/>
 
 					{/* Events */}
-					<div class="collapse navbar-collapse" id="navbarButtonsExample">
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							<li class="nav-item">
-								<a class="nav-link" href="#" style={{ marginLeft: "20px" }}>
-									Events
-								</a>{" "}
-								{/* We could put a general list of events that users can see even when logged out */}
-							</li>
-						</ul>
+					{!sidebar && (
+						<div class="collapse navbar-collapse" id="navbarButtonsExample">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+									<a class="nav-link" href="#" style={{ marginLeft: "20px" }}>
+										Events
+									</a>{" "}
+									{/* We could put a general list of events that users can see even when logged out */}
+								</li>
+							</ul>
 
-						{/* Search bar and search icon */}
-						<span style={{ marginRight: "0px" }}>
-							<nav class="navbar navbar-dark">
-								<span class="container-fluid">
-									<SearchBar />
+							{/* Search bar and search icon */}
+							<span style={{ marginRight: "0px" }}>
+								<nav class="navbar navbar-dark">
+									<span class="container-fluid">
+										<SearchBar />
+										<GitHubButton />
+									</span>
+								</nav>
+							</span>
+						</div>
+					)}
 
-									<GitHubButton />
-								</span>
-							</nav>
-						</span>
-					</div>
 				</nav>
 			</div>
 		</>

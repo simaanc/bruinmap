@@ -30,13 +30,17 @@
 	margin-right: 20px;
 	position: absolute;
 	right: 0;
+	background-color: #1c1e21;
+	border-radius: 8px;
+	color: #fff; /* Dark theme text color */
+	
 }
 
 /* Entire sidebar menu */
 .sidebar-menu {
 	display: flex;
 	flex-direction: column;
-	width: 200px;
+	width: 300px;
 	position: absolute;
 	top: 90px;
 	right: -100%;
