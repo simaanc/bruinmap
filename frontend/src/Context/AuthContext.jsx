@@ -73,7 +73,11 @@ export const AuthContextProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const value = { user, createUser, signIn, logout, loading, error, resetPassword };
+
+  const isLoggedIn = !!user;
+
+
+  const value = { user, isLoggedIn, signIn, logout, loading, error, resetPassword };
 
   return (
     <AuthContext.Provider value={value}>

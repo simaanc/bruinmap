@@ -1,88 +1,107 @@
 /* Stuff for Navbar.js */
 .navbar {
-    background: #1c1e21;
-    height: 90px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    position: sticky;
-    top: 0;
-    z-index: 999;
+	background: #1c1e21;
+	height: 90px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.2rem;
+	position: sticky;
+	top: 0;
+	z-index: 999;
 }
 
 .bruinmap-logo {
-    margin-left: 16px;
-    box-shadow: 0 0 5px #0a87ca;
-    border-radius: 10px;
-    background-color: #232629;
+	margin-left: 16px;
+	/* box-shadow: 0 0 5px #0a87ca; 
+	border-radius: 10px;
+	background-color: #232629;*/
 }
 
 .sign-in-button {
-    margin-top: 8px;
-    margin-left: 32px;
-    margin-right: 32px;
-    color: #024b76;
-    border-color: #024b76;
+	margin-top: 8px;
+	margin-left: 32px;
+	margin-right: 32px;
+	color: #024b76;
+	border-color: #024b76;
 }
 
 .sidebar-button {
-    margin-right: 20px;
-    position: absolute;
-    right: 0;
+	margin-right: 20px;
+	position: absolute;
+	right: 0;
 }
 
 /* Entire sidebar menu */
 .sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-    position: absolute;
-    top: 90px;
-    right: -100%;
-    opacity: 1;
-    transition: 850ms;
-    padding: 0px;
-    border-bottom-left-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	width: 200px;
+	position: absolute;
+	top: 90px;
+	right: -100%;
+	opacity: 1;
+	transition: 850ms;
+	padding: 0px;
+	border-bottom-left-radius: 8px;
 }
 
 .sidebar-menu.active {
-    background: #1c1e21;
-    right: 0;
-    opacity: 1;
-    transition: all 0.6s ease;
-    z-index: 1;
+	background: #1c1e21;
+	right: 0;
+	opacity: 1;
+	transition: all 0.6s ease;
+	z-index: 1;
 }
 
 .sidebar-text {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    padding: 8px 0px 8px 16px;
-    list-style: none;
-    height: 60px;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	padding: 8px 0px 8px 16px;
+	list-style: none;
+	height: 60px;
 }
 
 .sidebar-text a {
-    text-decoration: none;
-    color: #f5f5f5;
-    font-size: 18px;
-    width: 95%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    border-radius: 4px;
+	text-decoration: none;
+	color: #f5f5f5;
+	font-size: 18px;
+	width: 95%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding: 0 16px;
+	border-radius: 4px;
 }
 
 .sidebar-text a:hover {
-    background-color: #0a87ca; 
+	background-color: #0a87ca;
 }
 
 .sidebar-menu-items {
-    width: 100%;
+	width: 100%;
 }
 
+/* Placeholder text styling for light theme */
+.light-theme-placeholder::placeholder {
+	color: #6c757d; /* Light grey, adjust as needed */
+}
+
+/* Placeholder text styling for dark theme */
+.dark-theme-placeholder::placeholder {
+	color: #ced4da; /* Slightly lighter grey, adjust as needed for visibility */
+}
+
+/* You might also want to adjust the text color for input text in dark mode */
+.dark-theme-placeholder {
+	color: #ffffff; /* White text for input fields in dark theme */
+}
+
+/* Similarly, adjust for light theme if needed */
+.light-theme-placeholder {
+	color: #000000; /* Dark text for input fields in light theme, adjust if using a different color */
+}
 /*.sidebar-toggle {
     display: block;
     position: absolute;
@@ -92,7 +111,3 @@
     font-size: 1.8rem;
     cursor: pointer;
 }*/
-
-span {
-    margin-left: 16px;
-}
