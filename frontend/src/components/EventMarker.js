@@ -3,8 +3,10 @@ import { Marker, Popup } from "react-leaflet";
 import customMarkerImg from "../Assets/map-marker-icon.png";
 import L from "leaflet";
 import { useAuth } from "../Context/AuthContext";
+import { Button } from "react-bootstrap";
+import "./Event.css";
 
-const EventMarker = ({ marker, onSaveEvent }) => {
+const EventMarker = ({ marker, onSaveEvent, isDarkTheme }) => {
 	const { user } = useAuth();
 	const handleSaveEvent = () => {
 		onSaveEvent(marker);
@@ -17,7 +19,7 @@ const EventMarker = ({ marker, onSaveEvent }) => {
 
 	return (
 		<Marker position={marker.position} icon={customIcon}>
-			<Popup>
+			<Popup className="event-popup">
 				<h3>{marker.name}</h3>
 				<p>{marker.description}</p>
 				<p>Date: {marker.date}</p>
@@ -27,7 +29,7 @@ const EventMarker = ({ marker, onSaveEvent }) => {
 					{!user ? (
 						<p>Sign in to save!</p>
 					) : (
-						<button onClick={handleSaveEvent}>Save Event</button>
+						<Button type="button" className="outline-primary event-button" onClick={handleSaveEvent}>Save Event</Button>
 					)}
 				</div>
 			</Popup>

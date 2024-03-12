@@ -66,8 +66,8 @@ const DropdownMenu = ({
 			<Dropdown.Menu className={`dropdown-menu ${themeClass}`}>
 				{user ? (
 					<>
-						<Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-						<Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
+						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-2">Another action</Dropdown.Item>
 						<Button
 							type="button"
 							variant="outline-danger"
@@ -103,12 +103,16 @@ const DropdownMenu = ({
 							<div className="d-flex"></div>
 							<Button
 								variant="outline-success"
-								className="mr-2"
+								className="mr-2 log-in-button"
 								onClick={handleLogin}
 							>
 								Log In
 							</Button>
-							<Button variant="outline-primary" onClick={handleSignUp}>
+							<Button
+								variant="outline-primary"
+								className="sign-up-button"
+								onClick={handleSignUp}
+							>
 								Sign Up
 							</Button>
 						</Col>

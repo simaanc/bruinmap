@@ -12,6 +12,7 @@ import GitHubButton from "./GitHubButton";
 import Sidebar from "./Sidebar.js";
 import DropdownMenu from "./DropdownMenu.js";
 import { useThemeDetector } from "./utils";
+import EventsSidePanel from "./EventsSidePanel.js";
 
 const Navbar = () => {
 	// States
@@ -127,7 +128,7 @@ const Navbar = () => {
 						/>
 					</div>
 
-					{/* Sidebar open button */}
+					{/* Sidebar */}
 					<button
 						class="sidebar-button"
 						type="button"
