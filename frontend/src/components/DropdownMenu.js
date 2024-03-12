@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, Dropdown, Form, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -53,8 +53,16 @@ const DropdownMenu = ({
 			: "light-theme";
 	};
 
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+	const handleDropdownToggle = (isOpen, event, metadata) => {
+		setIsDropdownOpen(isOpen);
+	};
+
 	return (
-		<Dropdown>
+		<>
+		{isDropdownOpen && <div className="blur-overlay"></div>}
+		<Dropdown onToggle={handleDropdownToggle}>
 			<Dropdown.Toggle
 				variant="primary"
 				id="dropdown-basic"
@@ -126,6 +134,7 @@ const DropdownMenu = ({
 				)}
 			</Dropdown.Menu>
 		</Dropdown>
+		</>
 	);
 };
 
