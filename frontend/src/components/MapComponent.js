@@ -12,8 +12,6 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
 import EventMarker from "./EventMarker";
-import { auth, db, firebaseConfig } from "../firebase.config";
-import { doc, setDoc } from "firebase/firestore";
 import { useAuth } from "../Context/AuthContext";
 import { useThemeDetector } from "./utils";
 
@@ -349,12 +347,20 @@ const MapComponent = () => {
 				return;
 			}
 
-			const userDocRef = db.collection("users").doc(user.uid);
-			await userDocRef.update({
-				events: firebaseConfig.firestore.FieldValue.arrayUnion(event._id),
-			});
+			// Make an API request to save the event to the user's events array
+			await axios.post(
+				"http://localhost:5000/api/auth/save-event",
+				{
+					eventId: event._id,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+				}
+			);
 
-			console.log("Event saved", event);
+			console.log("Event saved", event.name);
 		} catch (error) {
 			console.log("Error saving event: ", error);
 		}

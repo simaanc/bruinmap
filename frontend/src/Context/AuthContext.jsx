@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
-import { auth, db } from '../firebase.config';
-import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -9,21 +8,17 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const createUser = async (email, password) => {
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const userUid = userCredential.user.uid;
-      const userDocRef = doc(db, 'users', userUid); // Assuming you have a 'users' collection
-      await setDoc(userDocRef, {
-        email,
-        events: [] // Empty events array
-      }); // You might want to add more details here
-      setUser(userCredential.user);
+      const response = await axios.post('http://localhost:5000/api/auth/signup', { email, password });
+      setUser(response.data.user);
+      navigate('/');
     } catch (err) {
-      setError(err.message);
-      console.error("Error creating user: ", err.message);
+      setError(err.response.data.message);
+      console.error("Error creating user: ", err.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -32,54 +27,59 @@ export const AuthContextProvider = ({ children }) => {
   const resetPassword = async (email) => {
     setLoading(true);
     try {
-      await sendPasswordResetEmail(auth, email);
+      await axios.post('http://localhost:5000/api/auth/reset-password', { email });
       alert('Password reset email sent!');
     } catch (err) {
-      setError(err.message);
-      console.error("Error sending password reset email: ", err.message);
+      setError(err.response.data.message);
+      console.error("Error sending password reset email: ", err.response.data.message);
     } finally {
       setLoading(false);
     }
   };
 
   const signIn = async (email, password) => {
-    setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user);
+      const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      setUser(response.data.user);
+      navigate('/');
     } catch (err) {
-      setError(err.message);
-      console.log(err.message); // You're already logging here
-    } finally {
-      setLoading(false);
+      setError(err.response.data.message);
+      console.log(err.response.data.message);
     }
   };
 
   const logout = async () => {
     setLoading(true);
     try {
-      await signOut(auth);
+      await axios.post('http://localhost:5000/api/auth/signout');
       setUser(null);
+      navigate('/');
     } catch (err) {
-      setError(err.message);
-      console.error("Error signing out: ", err.message);
+      setError(err.response.data.message);
+      console.error("Error signing out: ", err.response.data.message);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/auth/me');
+        setUser(response.data.user);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
-
   const isLoggedIn = !!user;
-
-
   const value = { user, isLoggedIn, signIn, logout, loading, error, createUser, resetPassword };
 
   return (
