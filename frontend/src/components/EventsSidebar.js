@@ -4,8 +4,11 @@ import { useAuth } from "../Context/AuthContext";
 import "./Sidebar.css";
 import { EventData } from "./EventsData";
 import { Link } from "react-router-dom";
+import "./Sidebar.css";
+import { faArrowLeft, faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const EventsSidebar = ({eventsSidebar, showEventsSidebar, isLoggedIn}) => {
+const EventsSidebar = ({sidebar, showSidebar, eventsSidebar, showEventsSidebar, isLoggedIn}) => {
 	const { user } = useAuth();
 	const [userEvents, setUserEvents] = useState([]);
 
@@ -41,7 +44,25 @@ const EventsSidebar = ({eventsSidebar, showEventsSidebar, isLoggedIn}) => {
 			<div className="event-sidebar">
 				{/* Sidebar */}
 				<nav className={eventsSidebar ? "sidebar-menu active" : "sidebar-menu"} >
-					<ul className="sidebar-menu-items" onClick={showEventsSidebar}
+					{/* Shows an 'X' if the main sidebar isn't open, or a left arrow if the main sidebar is open */}
+					<button
+						class="event-sidebar-button"
+						onClick={showSidebar}
+					>
+						{sidebar ? (
+							<FontAwesomeIcon
+								icon={faArrowLeft}
+								className="fa-icon"
+							/>
+						) : (
+							<FontAwesomeIcon
+								icon={faX}
+								className="fa-icon"
+							/>
+						)}
+					</button>
+
+					<ul className="sidebar-menu-items event-options" onClick={showEventsSidebar}
 					>
 						{/* Sidebar Items */}
 						{EventData.filter((item) => !item.protected || isLoggedIn).map(
