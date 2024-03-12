@@ -15,11 +15,18 @@ export const EventData = [
 		protected: false,
 	},
 	{
-		title: "Event 2",
+		title: "Saved Event 1",
 		path: "/",
 		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
 		protected: true,
+	},
+	{
+		title: "Event 2",
+		path: "/",
+		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
+		cName: "sidebar-text",
+		protected: false,
 	},
 	{
 		title: "Event 3",
@@ -29,10 +36,10 @@ export const EventData = [
 		protected: false,
 	},
 	{
-		title: "Event 4",
+		title: "Saved Event 2",
 		path: "/",
 		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
-		protected: false,
+		protected: true,
 	},
 ];

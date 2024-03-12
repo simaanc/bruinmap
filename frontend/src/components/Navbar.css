@@ -3,7 +3,7 @@
 	background: #1c1e21;
 	height: 90px;
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	font-size: 1.2rem;
 	position: sticky;
@@ -18,12 +18,15 @@
 	background-color: #232629;*/
 }
 
+
+
 .sign-in-button {
 	margin-top: 8px;
 	margin-left: 32px;
 	margin-right: 32px;
 	color: #024b76;
 	border-color: #024b76;
+
 }
 
 /* Placeholder text styling for light theme */

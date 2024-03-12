@@ -4,6 +4,7 @@ import {
 	faLocationDot,
 	faHome,
 	faCalendarDays,
+	faBookmark
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import "./Sidebar.css";
@@ -21,19 +22,27 @@ export const SidebarData = [
 	},
 	{
 		title: "Events",
-		path: "/events",
+		path: "/",
 		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
 		type: "events",
-		protected: true,
-	},
-	{
-		title: "Navigation",
-		path: "/nav",
-		icon: <FontAwesomeIcon icon={faLocationDot} style={{ margin: "8px" }} />,
-		cName: "sidebar-text",
 		protected: false,
 	},
+	// {
+	// 	title: "My Events",
+	// 	path: "/",
+	// 	icon: <FontAwesomeIcon icon={faBookmark} style={{ margin: "8px" }} />,
+	// 	cName: "sidebar-text",
+	// 	type: "saved-events",
+	// 	protected: true,
+	// },
+	// {
+	// 	title: "Navigation",
+	// 	path: "/nav",
+	// 	icon: <FontAwesomeIcon icon={faLocationDot} style={{ margin: "8px" }} />,
+	// 	cName: "sidebar-text",
+	// 	protected: false,
+	// },
 	{
 		title: "GitHub",
 		type: "gitHubButton",

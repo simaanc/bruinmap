@@ -1,43 +1,66 @@
 /* Theme-specific styles */
 .dark-theme {
-	background-color: rgb(55, 55, 55, 0.95); /* Dark theme background */
-	color: #fff; /* Dark theme text color */
+	background-color: rgb(55, 55, 55, 0.95);
+	/* Dark theme background */
+	color: #fff;
+	/* Dark theme text color */
 }
 
 .light-theme {
-	background-color: rgb(255, 255, 255, 0.95); /* Light theme background */
-	color: #000; /* Light theme text color */
+	background-color: rgb(255, 255, 255, 0.95);
+	/* Light theme background */
+	color: #000;
+	/* Light theme text color */
 }
 
 /* Assuming your themes are set on the <html> element as .dark-theme or .light-theme */
 :root.dark-theme .form-control::placeholder {
-	color: #ced4da; /* Dark theme placeholder color */
+	color: #ced4da;
+	/* Dark theme placeholder color */
 }
 
 :root.light-theme .form-control::placeholder {
-	color: #6c757d; /* Light theme placeholder color */
+	color: #6c757d;
+	/* Light theme placeholder color */
 }
 
 /* Dropdown toggle button */
 .dropdown-toggle.dark-theme {
-	background-color: #222; /* Darker for dark theme */
+	background-color: #222;
+	/* Darker for dark theme */
 	border-color: #444;
 	box-shadow: 0 0 5px #222;
 }
 
 .dropdown-toggle.light-theme {
-	background-color: #0a87ca; /* Lighter for light theme */
+	background-color: #0a87ca;
+	/* Lighter for light theme */
 	border-color: #024b76;
 	box-shadow: 0 0 5px #0a87ca;
 }
 
 /* Dropdown menu */
 .dropdown-menu {
-	max-height: 300px; /* Adjust as needed */
-	overflow-y: auto; /* Enables vertical scrolling */
-	overflow-x: hidden; /* Keeps the horizontal scroll bar hidden */
-  }
+	max-height: 300px;
+	/* Adjust as needed */
+	overflow-y: auto;
+	/* Enables vertical scrolling */
+	overflow-x: hidden;
+	/* Keeps the horizontal scroll bar hidden */
+}
 
+.blur-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	backdrop-filter: blur(2px);
+	background: rgba(0, 0, 0, 0.2); /* Darken the background */
+    pointer-events: none; /* Allows clicks to pass through */
+	z-index: 10;
+	/* Ensure this is below your dropdown's z-index */
+}
 
 .dropdown-menu.dark-theme {
 	padding: 10px;
@@ -96,7 +119,8 @@
 	margin-top: 8px;
 	margin-left: 20px;
 	position: relative;
-	right: -18%; /* idk i was trying to center it without hard coding the margins in */
+	right: -18%;
+	/* idk i was trying to center it without hard coding the margins in */
 }
 
 /* Style for the "Forgot Password?" link */
@@ -116,5 +140,6 @@
 
 /* General form control adjustments */
 .form-control {
-	margin-top: 8px; /* Ensures consistent margin for all form controls */
+	margin-top: 8px;
+	/* Ensures consistent margin for all form controls */
 }

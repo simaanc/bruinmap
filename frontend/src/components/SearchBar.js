@@ -36,6 +36,7 @@ const SearchBar = () => {
 				<button
 					type="submit"
 					style={{
+						zIndex: "999",
 						backgroundColor: "#0a87ca",
 						borderColor: "#024b76",
 						borderWidth: "1.5px",
