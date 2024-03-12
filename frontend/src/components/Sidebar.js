@@ -5,7 +5,7 @@ import { SidebarData } from "./SidebarData";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 
-const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
+const Sidebar = ({ sidebar, showSidebar, isLoggedIn, showEventsSidebar, eventsSidebarFromSidebar, setEventsSidebarFromSidebar }) => {
 	const handleSearchBarClick = (event) => {
 		event.stopPropagation();
 	};
@@ -43,8 +43,18 @@ const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 									</li>
 
 								);
-							}
-							else {
+							} else if (item.type === "events") {
+								// Render the eventsSidebar for this special case
+								return (
+									<li key={index} className={item.cName} onClick={() => {showSidebar(); showEventsSidebar(); eventsSidebarFromSidebar ? setEventsSidebarFromSidebar(eventsSidebarFromSidebar) : setEventsSidebarFromSidebar(!eventsSidebarFromSidebar);}}>
+										<Link to="#">
+											{item.icon}
+											<span>{item.title}</span>
+										</Link>
+									</li>
+
+								);
+							} else {
 								// Render normal sidebar items
 								return (
 									<li key={index} className={item.cName}>

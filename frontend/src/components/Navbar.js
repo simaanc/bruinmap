@@ -46,6 +46,7 @@ const Navbar = () => {
 	const showEventsSidebar = () => {
 		setEventsSidebar(!eventsSidebar);
 	};
+	const [eventsSidebarFromSidebar, setEventsSidebarFromSidebar] = useState(false);
 
 	const triggerShakeAnimation = () => {
 		setInputClass("animate__animated animate__shakeX");
@@ -136,7 +137,7 @@ const Navbar = () => {
 						aria-controls="navbarButtonsExample"
 						aria-expanded="false"
 						aria-label="Toggle navigation"
-						onClick={showSidebar}
+						onClick={eventsSidebarFromSidebar ? (showEventsSidebar, showSidebar) : showSidebar}
 					>
 						{sidebar ? (
 							<FontAwesomeIcon
@@ -154,13 +155,19 @@ const Navbar = () => {
 						sidebar={sidebar}
 						showSidebar={showSidebar}
 						isLoggedIn={isLoggedIn}
+						showEventsSidebar={showEventsSidebar}
 						style={{ height: "100%" }}
+						eventsSidebarFromSidebar={eventsSidebarFromSidebar}
+						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
 					/>
 					<EventsSidebar
 						eventsSidebar={eventsSidebar}
 						showEventsSidebar={showEventsSidebar}
 						isLoggedIn={isLoggedIn}
 						style={{ height: "100%" }}
+						showSidebar={showSidebar}
+						eventsSidebarFromSidebar={eventsSidebarFromSidebar}
+						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
 					/>
 					{/* Events */}
 					{!sidebar && (
