@@ -354,7 +354,7 @@ const MapComponent = () => {
 		{
 			id: 'sampleRoom',
 			name: 'Sample Room',
-			coords: [[34.0689, -118.4436], [34.069, -118.4436], [34.069, -118.443], [34.0689, -118.443]] // Replace these coordinates with the actual room's coordinates
+			coords: [[34.06968095485549, -118.44335205852985], [34.06981224268689, -118.44335138797761], [34.069812243515216, -118.44303237274289], [34.06968102752697, -118.44303228892387]] // Replace these coordinates with the actual room's coordinates
 		}
 	]);
 
@@ -560,10 +560,10 @@ const MapComponent = () => {
 					maxZoom={24}
 				/>
 				{rooms.map(room => (
-                    <Polygon key={room.id} positions={room.coords} color="blue" >
-                        <Popup>{room.name}</Popup>
-                    </Polygon>
-                ))}
+					<Polygon key={room.id} positions={room.coords} color="blue" >
+						<Popup>{room.name}</Popup>
+					</Polygon>
+				))}
 				{events.map((event) => (
 					<EventMarker
 						key={event._id}
