@@ -12,7 +12,6 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
 import EventMarker from "./EventMarker";
-import { eventMarkerData } from "./eventMarkerData";
 import { auth, db, firebaseConfig } from "../firebase.config";
 import { doc, setDoc } from "firebase/firestore";
 import { useAuth } from "../Context/AuthContext";
@@ -336,13 +335,14 @@ const MapComponent = () => {
 	const [zoomLevel, setZoomLevel] = useState(18);
 	const [searchResults, setSearchResults] = useState([]);
 	const [isSearchActive, setIsSearchActive] = useState(false);
+	const [events, setEvents] = useState([]);
 
 	const mapRef = useRef(null);
 	const buildingData = useBuildingData();
 
 	const { user } = useAuth();
 
-	const handleSaveEvent = async (marker) => {
+	const handleSaveEvent = async (event) => {
 		try {
 			if (!user) {
 				console.error("User is not logged in.");
@@ -351,10 +351,10 @@ const MapComponent = () => {
 
 			const userDocRef = db.collection("users").doc(user.uid);
 			await userDocRef.update({
-				events: firebaseConfig.firestore.FieldValue.arrayUnion(marker.id),
+				events: firebaseConfig.firestore.FieldValue.arrayUnion(event._id),
 			});
 
-			console.log("Event saved", marker);
+			console.log("Event saved", event);
 		} catch (error) {
 			console.log("Error saving event: ", error);
 		}
@@ -436,6 +436,19 @@ const MapComponent = () => {
 	);
 
 	useEffect(() => {
+		const fetchEvents = async () => {
+			try {
+				const response = await axios.get("http://localhost:5000/events");
+				setEvents(response.data);
+			} catch (error) {
+				console.error("Failed to fetch events:", error);
+			}
+		};
+
+		fetchEvents();
+	}, []);
+
+	useEffect(() => {
 		const handleSearchEvent = (event) => {
 			const searchTerm = event.detail;
 			handleSearch(searchTerm);
@@ -511,10 +524,10 @@ const MapComponent = () => {
 					maxZoom={24}
 				/>
 
-				{eventMarkerData.map((marker) => (
+				{events.map((event) => (
 					<EventMarker
-						key={marker.id}
-						marker={marker}
+						key={event._id}
+						marker={event}
 						onSaveEvent={handleSaveEvent}
 					/>
 				))}

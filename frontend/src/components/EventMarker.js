@@ -8,6 +8,7 @@ import "./Event.css";
 
 const EventMarker = ({ marker, onSaveEvent }) => {
 	const { user } = useAuth();
+
 	const handleSaveEvent = () => {
 		onSaveEvent(marker);
 	};
@@ -18,22 +19,28 @@ const EventMarker = ({ marker, onSaveEvent }) => {
 	});
 
 	return (
-		<Marker position={marker.position} icon={customIcon}>
+		<Marker position={[marker.coords[0], marker.coords[1]]} icon={customIcon}>
 			<Popup className="event-popup">
 				<h3>{marker.name}</h3>
-				<p>{marker.description}</p>
-				<p>Date: {marker.date}</p>
-				<p>Time: {marker.time}</p>
-
+				<p>{marker.details}</p>
+				<p>Date: {new Date(marker.time).toLocaleDateString()}</p>
+				<p>Time: {new Date(marker.time).toLocaleTimeString()}</p>
 				<div>
 					{!user ? (
 						<p>Sign in to save!</p>
 					) : (
-						<Button type="button" className="outline-primary event-button" onClick={handleSaveEvent}>Save Event</Button>
+						<Button
+							type="button"
+							className="outline-primary event-button"
+							onClick={handleSaveEvent}
+						>
+							Save Event
+						</Button>
 					)}
 				</div>
 			</Popup>
 		</Marker>
 	);
 };
+
 export default EventMarker;
