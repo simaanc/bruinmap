@@ -12,6 +12,7 @@ import GitHubButton from "./GitHubButton";
 import Sidebar from "./Sidebar.js";
 import DropdownMenu from "./DropdownMenu.js";
 import { useThemeDetector } from "./utils";
+import EventsSidebar from "./EventsSidebar.js"
 
 const Navbar = () => {
 	// States
@@ -22,8 +23,6 @@ const Navbar = () => {
 	const [password, setPassword] = useState("");
 	const [isSigningUp, setIsSigningUp] = useState(false);
 	const [inputClass, setInputClass] = useState(""); // State for input classes
-
-	const [showEventsSidebar, setShowEventsSidebar] = useState(false);
 
 	const buttonStyle =
 		email && password // For the "Sign In" button
@@ -41,6 +40,11 @@ const Navbar = () => {
 	const [sidebar, setSidebar] = useState(false);
 	const showSidebar = () => {
 		setSidebar(!sidebar);
+	};
+	// For the event sidebar
+	const [eventsSidebar, setEventsSidebar] = useState(false);
+	const showEventsSidebar = () => {
+		setEventsSidebar(!eventsSidebar);
 	};
 
 	const triggerShakeAnimation = () => {
@@ -91,13 +95,10 @@ const Navbar = () => {
 		}
 	};
 
-	const toggleEventsBar = () => {
-		setShowEventsSidebar(!showEventsSidebar);
-	};
 
 	return (
 		<>
-			<div>
+			<div >
 				<nav className="navbar navbar-expand-lg navbar-dark">
 					<div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
 						{/* Logo at the top left */}
@@ -153,23 +154,21 @@ const Navbar = () => {
 						sidebar={sidebar}
 						showSidebar={showSidebar}
 						isLoggedIn={isLoggedIn}
-						style={{ backgroundColor: "red" }}
+						style={{ height: "100%" }}
 					/>
-
+					<EventsSidebar
+						eventsSidebar={eventsSidebar}
+						showEventsSidebar={showEventsSidebar}
+						isLoggedIn={isLoggedIn}
+						style={{ height: "100%" }}
+					/>
 					{/* Events */}
 					{!sidebar && (
 						<div class="collapse navbar-collapse" id="navbarButtonsExample">
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
-									<a
-										class="nav-link"
-										href="#"
-										style={{ marginLeft: "20px" }}
-										onClick={toggleEventsBar}
-									>
-										Events
-									</a>{" "}
-									{/* We could put a general list of events that users can see even when logged out */}
+
+
 								</li>
 							</ul>
 
@@ -178,6 +177,26 @@ const Navbar = () => {
 								<nav class="navbar navbar-dark">
 									<span class="container-fluid">
 										<SearchBar />
+										{/* Not using EventsButton.js, just using it inline w/ Srishti's method */}
+										<button
+											class="input-group-text border-0"
+											//href="#"
+											style={{
+												backgroundColor: "#0a87ca",
+												borderColor: "#024b76",
+												borderWidth: "1.5px",
+												boxShadow: "0 0 5px #0a87ca",
+												padding: "8px",
+												margin: "8px",
+												color: "white",
+												borderRadius: "8px"
+											}}
+											onClick={showEventsSidebar}
+										>
+											Events
+										</button>
+
+
 										<GitHubButton />
 									</span>
 								</nav>
@@ -185,7 +204,6 @@ const Navbar = () => {
 						</div>
 					)}
 				</nav>
-				{showEventsSidebar && <EventsSidePanel />}
 			</div>
 		</>
 	);

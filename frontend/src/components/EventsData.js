@@ -8,7 +8,7 @@ import {
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import "./Sidebar.css";
 
-export const SidebarData = [
+export const EventData = [
 	{
 		type: "searchBar",
 	},

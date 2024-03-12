@@ -4,7 +4,6 @@ import "./Sidebar.css";
 import { SidebarData } from "./SidebarData";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
-import GitHubButton from "./GitHubButton";
 
 const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 	const handleSearchBarClick = (event) => {
@@ -12,10 +11,12 @@ const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 	};
 
 	return (
-		<div>
+		<div className="wrapper">
+		<div className="sidebar">
 			{/* Sidebar */}
-			<nav className={sidebar ? "sidebar-menu active" : "sidebar-menu"}>
-				<ul className="sidebar-menu-items" onClick={showSidebar}>
+			<nav className={sidebar ? "sidebar-menu active" : "sidebar-menu"} >
+				<ul className="sidebar-menu-items" onClick={showSidebar}
+					>
 					{/* Sidebar Items */}
 					{SidebarData.filter((item) => !item.protected || isLoggedIn).map(
 						(item, index) => {
@@ -30,7 +31,20 @@ const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 										<SearchBar />
 									</li>
 								);
-							} else {
+							} else if (item.type === "gitHubButton") {
+								// Render the SearchBar component for this special case
+								return (
+									<li key={index} className={item.cName}>
+										<Link to={"https://github.com/simaanc/bruinmap"}>
+											{item.icon}
+											<span>{item.title}</span>
+										</Link>
+
+									</li>
+
+								);
+							}
+							else {
 								// Render normal sidebar items
 								return (
 									<li key={index} className={item.cName}>
@@ -45,6 +59,7 @@ const Sidebar = ({ sidebar, showSidebar, isLoggedIn }) => {
 					)}
 				</ul>
 			</nav>
+		</div >
 		</div>
 	);
 };
