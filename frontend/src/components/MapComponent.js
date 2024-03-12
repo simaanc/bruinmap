@@ -13,7 +13,7 @@ import L from "leaflet";
 import axios from "axios";
 import EventMarker from "./EventMarker";
 import { auth, db, firebaseConfig } from "../firebase.config";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useAuth } from "../Context/AuthContext";
 import { useThemeDetector } from "./utils";
 
@@ -348,13 +348,11 @@ const MapComponent = () => {
 				console.error("User is not logged in.");
 				return;
 			}
-
-			const userDocRef = db.collection("users").doc(user.uid);
-			await userDocRef.update({
-				events: firebaseConfig.firestore.FieldValue.arrayUnion(event._id),
+			const userDocRef = doc(db, "users", "events");
+			await updateDoc(userDocRef, {
+				events: arrayUnion(event._id),
 			});
-
-			console.log("Event saved", event);
+			console.log("Event saved", event.name);
 		} catch (error) {
 			console.log("Error saving event: ", error);
 		}

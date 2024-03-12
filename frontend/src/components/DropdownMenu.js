@@ -66,8 +66,8 @@ const DropdownMenu = ({
 			<Dropdown.Menu className={`dropdown-menu ${themeClass}`}>
 				{user ? (
 					<>
-						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
-						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-2">Another action</Dropdown.Item>
+						{/* <Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
+						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-2">Another action</Dropdown.Item> */}
 						<Button
 							type="button"
 							variant="outline-danger"
