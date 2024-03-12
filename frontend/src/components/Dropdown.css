@@ -41,32 +41,62 @@
 
 .dropdown-menu.dark-theme {
 	padding: 10px;
+	min-width: 250px;
 	/* Inherits background and text color from .dark-theme */
 }
 
 .dropdown-menu.light-theme {
 	padding: 10px;
+	min-width: 250px;
 	/* Inherits background and text color from .light-theme */
 }
 
+/* Styles for the options when logged in */
+.dropdown-loggedin-options {
+	color: grey;
+	text-align: center;
+	display: block;
+	margin-top: 8px;
+	padding: 8px;
+}
+
+.dropdown-loggedin-options:hover {
+	color: white;
+	background-color: grey;
+	opacity: 30%;
+	border-radius: 4px;
+}
+
 /* Sign-in and sign-up button styles */
-.sign-in-button,
+.log-in-button {
+	min-width: 108px;
+	padding: 8px;
+	margin-top: 8px;
+	margin-right: 4px;
+}
+
 .sign-up-button {
-	border-width: 1.5px;
+	min-width: 108px;
+	padding: 8px;
+	margin-top: 8px;
+	margin-left: 6px;
+	/*border-width: 1.5px;
 	width: 150px;
 	height: 40px;
 	line-height: 20px;
 	margin: 8px;
 	margin-top: 5px;
-	padding: 8px;
+	padding: 8px;*/
 }
 
 .logout-button {
 	border-width: 1.5px;
-	width: 150px;
-	height: 50px;
-	margin-top: 10px;
+	width: 108px;
+	padding: 8px;
+	margin-top: 8px;
 	margin-left: 20px;
+	position: relative;
+	right: -18%; /* idk i was trying to center it without hard coding the margins in */
 }
 
 /* Style for the "Forgot Password?" link */
@@ -74,6 +104,14 @@
 	color: grey;
 	text-align: center;
 	display: block;
+	margin-top: 8px;
+}
+
+.forgot-password:hover {
+	color: white;
+	background-color: grey;
+	opacity: 30%;
+	border-radius: 4px;
 }
 
 /* General form control adjustments */

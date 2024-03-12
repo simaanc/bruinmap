@@ -128,7 +128,7 @@ const Navbar = () => {
 						/>
 					</div>
 
-					{/* Sidebar open button */}
+					{/* Sidebar */}
 					<button
 						class="sidebar-button"
 						type="button"
