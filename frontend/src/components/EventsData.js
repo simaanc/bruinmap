@@ -1,11 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faLocationDot,
-	faHome,
-	faCalendarDays,
-} from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import "./Sidebar.css";
 
 export const EventData = [
@@ -13,30 +8,30 @@ export const EventData = [
 		type: "searchBar",
 	},
 	{
-		title: "Home",
+		title: "Event 1",
 		path: "/",
-		icon: <FontAwesomeIcon icon={faHome} style={{ margin: "8px" }} />,
+		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
 		protected: false,
 	},
 	{
-		title: "My Events",
-		path: "/saved-events",
+		title: "Event 2",
+		path: "/",
 		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
 		protected: true,
 	},
 	{
-		title: "Navigation",
-		path: "/nav",
-		icon: <FontAwesomeIcon icon={faLocationDot} style={{ margin: "8px" }} />,
+		title: "Event 3",
+		path: "/",
+		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
 		protected: false,
 	},
 	{
-		title: "GitHub",
-		type: "gitHubButton",
-		icon: <FontAwesomeIcon icon={faGithub} style={{ margin: "8px" }} />,
+		title: "Event 4",
+		path: "/",
+		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
 		protected: false,
 	},

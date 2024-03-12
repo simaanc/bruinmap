@@ -8,7 +8,7 @@ import "./Sidebar.css";
 import { faArrowLeft, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const EventsSidebar = ({sidebar, showSidebar, eventsSidebar, showEventsSidebar, isLoggedIn}) => {
+const EventsSidebar = ({sidebar, showSidebar, eventsSidebar, showEventsSidebar, eventsSidebarFromSidebar, setEventsSidebarFromSidebar, isLoggedIn}) => {
 	const { user } = useAuth();
 	const [userEvents, setUserEvents] = useState([]);
 
@@ -47,9 +47,9 @@ const EventsSidebar = ({sidebar, showSidebar, eventsSidebar, showEventsSidebar, 
 					{/* Shows an 'X' if the main sidebar isn't open, or a left arrow if the main sidebar is open */}
 					<button
 						class="event-sidebar-button"
-						onClick={showSidebar}
+						onClick={() => eventsSidebarFromSidebar ? (showSidebar(), showEventsSidebar(), setEventsSidebarFromSidebar()) : showEventsSidebar()}
 					>
-						{sidebar ? (
+						{eventsSidebarFromSidebar ? (
 							<FontAwesomeIcon
 								icon={faArrowLeft}
 								className="fa-icon"

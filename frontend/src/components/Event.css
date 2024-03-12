@@ -25,7 +25,8 @@
 .event-sidebar-button {
     margin-right: 20px;
 	position: absolute;
-	right: 0;
+	left: 0;
+    margin-left: 8px;
 	color: #fff; /* Dark theme text color */
     outline: none;
     background: none;

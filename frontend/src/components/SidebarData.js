@@ -20,10 +20,11 @@ export const SidebarData = [
 		protected: false,
 	},
 	{
-		title: "My Events",
-		path: "/saved-events",
+		title: "Events",
+		path: "/events",
 		icon: <FontAwesomeIcon icon={faCalendarDays} style={{ margin: "8px" }} />,
 		cName: "sidebar-text",
+		type: "events",
 		protected: true,
 	},
 	{
