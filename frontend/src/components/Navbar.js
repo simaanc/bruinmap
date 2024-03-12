@@ -130,27 +130,29 @@ const Navbar = () => {
 					</div>
 
 					{/* Sidebar */}
-					<button
-						class="sidebar-button"
-						type="button"
-						data-mdb-target="#navbarButtonsExample"
-						aria-controls="navbarButtonsExample"
-						aria-expanded="false"
-						aria-label="Toggle navigation"
-						onClick={eventsSidebarFromSidebar ? (showEventsSidebar, showSidebar) : showSidebar}
-					>
-						{sidebar ? (
-							<FontAwesomeIcon
-								icon={faX}
-								style={{ color: "white", padding: "4px" }}
-							/>
-						) : (
-							<FontAwesomeIcon
-								icon={faBars}
-								style={{ color: "white", padding: "4px" }}
-							/>
-						)}
-					</button>
+					{!eventsSidebar && (
+						<button
+							className="sidebar-button"
+							type="button"
+							data-mdb-target="#navbarButtonsExample"
+							aria-controls="navbarButtonsExample"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
+							onClick={showSidebar}
+						>
+							{sidebar ? (
+								<FontAwesomeIcon
+									icon={faX}
+									style={{ color: "white", padding: "4px" }}
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faBars}
+									style={{ color: "white", padding: "4px" }}
+								/>
+							)}
+						</button>
+					)}
 					<Sidebar
 						sidebar={sidebar}
 						showSidebar={showSidebar}
@@ -170,7 +172,7 @@ const Navbar = () => {
 						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
 					/>
 					{/* Events */}
-					{!sidebar && (
+					{!sidebar && !eventsSidebarFromSidebar && ( //BUG: HAMBURGER MENU DOES NOT DISAPPEAR AFTER CLICKING AN EVENT
 						<div class="collapse navbar-collapse" id="navbarButtonsExample">
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
