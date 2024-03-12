@@ -6,7 +6,7 @@ import { useAuth } from "../Context/AuthContext";
 import { Button } from "react-bootstrap";
 import "./Event.css";
 
-const EventMarker = ({ marker, onSaveEvent, isDarkTheme }) => {
+const EventMarker = ({ marker, onSaveEvent }) => {
 	const { user } = useAuth();
 	const handleSaveEvent = () => {
 		onSaveEvent(marker);
