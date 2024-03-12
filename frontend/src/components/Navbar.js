@@ -14,6 +14,7 @@ import DropdownMenu from "./DropdownMenu.js";
 import { useThemeDetector } from "./utils";
 import EventsSidebar from "./EventsSidebar.js"
 
+
 const Navbar = () => {
 	// States
 	const { user, isLoggedIn, signIn, logout, createUser, resetPassword } =
@@ -28,6 +29,9 @@ const Navbar = () => {
 		email && password // For the "Sign In" button
 			? { backgroundColor: "#0a87ca" } // Blue background when both fields are filled
 			: { backGroundColor: "grey" }; // Grey background when either field is empty
+
+
+
 
 	// For the search bar
 	const [placeholder, setPlaceholder] = useState("Search");
@@ -99,9 +103,9 @@ const Navbar = () => {
 
 	return (
 		<>
-			<div >
-				<nav className="navbar navbar-expand-lg navbar-dark">
-					<div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+			<div>
+				<nav className="navbar navbar-expand-md navbar-dark " >
+					<div style={{ display: "flex", alignItems: "center", gap: "20px", zIndex: "10000"}}>
 						{/* Logo at the top left */}
 						<Link to="/" className="navbar-brand me-2 bruinmap-logo">
 							<img
@@ -173,7 +177,7 @@ const Navbar = () => {
 					/>
 					{/* Events */}
 					{!sidebar && !eventsSidebarFromSidebar && ( //BUG: HAMBURGER MENU DOES NOT DISAPPEAR AFTER CLICKING AN EVENT
-						<div class="collapse navbar-collapse" id="navbarButtonsExample">
+						<div class="collapse navbar-collapse" id="navbarButtonsExample" >
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
 
@@ -182,12 +186,12 @@ const Navbar = () => {
 							</ul>
 
 							{/* Search bar and search icon */}
-							<span style={{ marginRight: "0px" }}>
-								<nav class="navbar navbar-dark">
-									<span class="container-fluid">
-										<SearchBar />
+							<span style={{ marginRight: "0px"}} >
+								<nav class="navbar navbar-dark" >
+									<span class="container-fluid" >
+										<SearchBar  />
 										{/* Not using EventsButton.js, just using it inline w/ Srishti's method */}
-										<button
+										<button 
 											class="input-group-text border-0"
 											//href="#"
 											style={{
@@ -198,7 +202,8 @@ const Navbar = () => {
 												padding: "8px",
 												margin: "8px",
 												color: "white",
-												borderRadius: "8px"
+												borderRadius: "8px",
+												
 											}}
 											onClick={showEventsSidebar}
 										>
