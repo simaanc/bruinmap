@@ -1,0 +1,39 @@
+.event-button {
+    min-width: 108px;
+	padding: 8px;
+}
+
+.event-popup .leaflet-popup-content-wrapper {
+    background-color: rgb(55, 55, 55, 0.95);
+    border-color: #444;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.event-popup .leaflet-popup-tip {
+    background-color: rgb(55, 55, 55, 0.95);
+}
+
+.fa-icon {
+    color: white;
+    padding: 4px;
+    align-items: center;
+    height: 24px;
+    width: 24px;
+}
+
+.event-sidebar-button {
+    margin-right: 20px;
+	position: absolute;
+	left: 0;
+    margin-left: 8px;
+	color: #fff; /* Dark theme text color */
+    outline: none;
+    background: none;
+    border-width: 0;
+}
+
+.event-option {
+    padding: 8px;
+    margin: 8px;
+}

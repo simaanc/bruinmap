@@ -1,76 +1,94 @@
 .App {
-  text-align: center;
+	text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+	height: 40vmin;
+	pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+	.App-logo {
+		animation: App-logo-spin infinite 20s linear;
+	}
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+	background-color: #282c34;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: white;
 }
 
 .App-link {
-  color: #61dafb;
+	color: #61dafb;
 }
 
 .leaflet-container {
-  height: 400px; /* Or any other height */
-  width: 100%;
+	height: 400px; /* Or any other height */
+	width: 100%;
 }
 
 .room-label {
-  background-color: transparent;
-  border:
-  none;
-  box-shadow: none;
-  font-weight: bold;
+	background-color: transparent;
+	border: none;
+	box-shadow: none;
+	font-weight: bold;
 }
 
 .custom-label .label-inner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100px; /* Adjust based on your needs */
-  height: 40px; /* Adjust based on your needs */
-  background-color: rgba(255, 255, 255, 0.8); /* Optional: for better readability */
-  border-radius: 4px; /* Optional: for styled corners */
-  color: black; /* Adjust text color as needed */
-  font-size: 14px; /* Adjust font size as needed */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100px; /* Adjust based on your needs */
+	height: 40px; /* Adjust based on your needs */
+	background-color: rgba(
+		255,
+		255,
+		255,
+		0.8
+	); /* Optional: for better readability */
+	border-radius: 4px; /* Optional: for styled corners */
+	color: black; /* Adjust text color as needed */
+	font-size: 14px; /* Adjust font size as needed */
 }
 
 .custom-tooltip {
-/* Example CSS based on your desired tooltip appearance */
-  background-color: white;
-  color: #333;
-  border-radius: 8px;
-  padding: 4px 8px;
+	/* Example CSS based on your desired tooltip appearance */
+	background-color: white;
+	color: #333;
+	border-radius: 8px;
+	padding: 4px 8px;
 }
 
 .home-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* 100% of the viewport height */
-  overflow: hidden; /* Prevent scrolling within this container */
+	display: flex;
+	flex-direction: column;
+	height: 100vh; /* 100% of the viewport height */
+	overflow: hidden; /* Prevent scrolling within this container */
 }
 
 .map-container {
-  flex-grow: 1; /* Allows the map to expand and fill available space */
-  overflow: hidden; /* Prevent the map itself from causing scrollbars */
+	flex-grow: 1; /* Allows the map to expand and fill available space */
+	overflow: hidden; /* Prevent the map itself from causing scrollbars */
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	line-height: 20px; /* Adjust the line height to center the text vertically */
+	text-align: center; /* Center the text horizontally */
+}
+
+/* Additional styles if you need to adjust the positioning */
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 @keyframes App-logo-spin {

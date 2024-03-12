@@ -1,169 +1,220 @@
 import React, { useState, useEffect } from "react";
-import {
-  Navbar,
-  Container,
-  Nav,
-  Button,
-  Form,
-  FormControl,
-  Row,
-  Col,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import logo from "../Assets/icon.jpg"; // Adjust the path as necessary
-import "animate.css";
+import { Col, Button, Form, Dropdown, FormControl } from "react-bootstrap";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
+import BruinMapIcon from "../Assets/bruinmaplogo.svg";
+//import "animate.css";
+import "./Navbar.css";
+import SearchBar from "./SearchBar";
+import GitHubButton from "./GitHubButton";
+import Sidebar from "./Sidebar.js";
+import DropdownMenu from "./DropdownMenu.js";
+import { useThemeDetector } from "./utils";
+import EventsSidebar from "./EventsSidebar.js"
 
-const UnifiedNavbar = () => {
-  const { user, signIn, logout, createUser, resetPassword } = useAuth();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSigningUp, setIsSigningUp] = useState(false);
-  const [theme, setTheme] = useState("dark"); // Default to dark theme
-  const [inputClass, setInputClass] = useState(""); // State for input classes
+const Navbar = () => {
+	// States
+	const { user, isLoggedIn, signIn, logout, createUser, resetPassword } =
+		useAuth();
+	const navigate = useNavigate();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isSigningUp, setIsSigningUp] = useState(false);
+	const [inputClass, setInputClass] = useState(""); // State for input classes
 
-  const triggerShakeAnimation = () => {
-    setInputClass("animate__animated animate__shakeX");
-    setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
-  };
+	const buttonStyle =
+		email && password // For the "Sign In" button
+			? { backgroundColor: "#0a87ca" } // Blue background when both fields are filled
+			: { backGroundColor: "grey" }; // Grey background when either field is empty
 
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setTheme(mq.matches ? "dark" : "light");
-    const handleChange = (e) => setTheme(e.matches ? "dark" : "light");
-    mq.addListener(handleChange);
-    return () => mq.removeListener(handleChange);
-  }, []);
+	// For the search bar
+	const [placeholder, setPlaceholder] = useState("Search");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!email || !password) {
-      triggerShakeAnimation();
-      return;
-    }
-  
-    // Attempt to sign in or sign up
-    try {
-      if (isSigningUp) {
-        await createUser(email, password);
-      } else {
-        await signIn(email, password);
-      }
-      navigate("/");
-    } catch (error) {
-      console.error("Sign in error:", error); // Log the error for inspection
-      if (error.code === "auth/user-not-found") {
-        console.error("Sign in error: User not found", error);
-      } else if (error.code === "auth/invalid-credential") {
-        console.error("Sign in error: Invalid credentials", error);
-      } else {
-        console.error(isSigningUp ? "Sign up error:" : "Sign in error:", error);
-      }
-      triggerShakeAnimation(); // Trigger shake animation on error as well
-    }
-  };
-  const handleSignOut = async () => {
-    try {
-      await logout();
-      navigate("/Home");
-    } catch (error) {
-      console.error("Sign out error:", error);
-    }
-  };
+	const handleFocus = () => setPlaceholder("Enter room # or building...");
+	const handleBlur = () => setPlaceholder("Search");
+	const theme = useThemeDetector();
 
-  const handleResetPassword = async () => {
-    if (!email) {
-      alert("Please enter your email address.");
-      return;
-    }
-    try {
-      await resetPassword(email);
-      alert("Please check your email to reset your password.");
-    } catch (error) {
-      console.error("Password reset error:", error);
-    }
-  };
+	// For the sidebar
+	const [sidebar, setSidebar] = useState(false);
+	const showSidebar = () => {
+		setSidebar(!sidebar);
+	};
+	// For the event sidebar
+	const [eventsSidebar, setEventsSidebar] = useState(false);
+	const showEventsSidebar = () => {
+		setEventsSidebar(!eventsSidebar);
+	};
+	const [eventsSidebarFromSidebar, setEventsSidebarFromSidebar] = useState(false);
 
-  return (
-    <Navbar
-      bg={theme}
-      expand="lg"
-      variant={theme}
-      className="py-2" /* Adjust padding here */
-    >
-      <Container fluid>
-        <Navbar.Brand onClick={() => navigate("/")}>
-          <img
-            src={logo}
-            alt="Logo"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />
-          My App
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link onClick={() => navigate("/")}>Home</Nav.Link>
-            {user && (
-              <Nav.Link onClick={() => navigate("/events")}>Events</Nav.Link>
-            )}
-          </Nav>
-          <Form inline="true" className="ml-auto" onSubmit={handleSubmit}>
-            {!user ? (
-              <Row className="align-items-center">
-                <Col xs="auto">
-                  <FormControl
-                    type="email"
-                    placeholder="Email"
-                    className={`mr-sm-2 ${inputClass}`} // Apply the inputClass here
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
-                  />
-                </Col>
-                <Col xs="auto">
-                  <FormControl
-                    type="password"
-                    placeholder="Password"
-                    className={`mr-sm-2 ${inputClass}`} // And here
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                  />
-                </Col>
-                <Col xs="auto">
-                  <Button
-                    type="submit"
-                    variant={
-                      isSigningUp ? "outline-primary" : "outline-success"
-                    }>
-                    {isSigningUp ? "Sign Up" : "Sign In"}
-                  </Button>
-                </Col>
-                <Col xs="auto">
-                  <Button
-                    type="button"
-                    variant="outline-secondary"
-                    onClick={handleResetPassword}
-                    className="ms-2">
-                    Forgot Password?
-                  </Button>
-                </Col>
-              </Row>
-            ) : (
-              <Button variant="outline-danger" onClick={handleSignOut}>
-                Sign Out
-              </Button>
-            )}
-          </Form>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
+	const triggerShakeAnimation = () => {
+		setInputClass("animate__animated animate__shakeX");
+		setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
+	};
+
+	const handleLogin = async () => {
+		try {
+			await signIn(email, password);
+			navigate("/");
+		} catch (error) {
+			console.error("Login error:", error);
+			triggerShakeAnimation(); // If you have an animation for errors
+		}
+	};
+
+	// Function to handle signup
+	const handleSignUp = async () => {
+		try {
+			await createUser(email, password);
+			navigate("/");
+		} catch (error) {
+			console.error("Signup error:", error);
+			triggerShakeAnimation(); // If you have an animation for errors
+		}
+	};
+
+	const handleSignOut = async () => {
+		try {
+			await logout();
+			navigate("/Home");
+		} catch (error) {
+			console.error("Sign out error:", error);
+		}
+	};
+
+	const handleResetPassword = async () => {
+		if (!email) {
+			alert("Please enter your email address.");
+			return;
+		}
+		try {
+			await resetPassword(email);
+			alert("Please check your email to reset your password.");
+		} catch (error) {
+			console.error("Password reset error:", error);
+		}
+	};
+
+
+	return (
+		<>
+			<div >
+				<nav className="navbar navbar-expand-lg navbar-dark">
+					<div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+						{/* Logo at the top left */}
+						<Link to="/" className="navbar-brand me-2 bruinmap-logo">
+							<img
+								src={BruinMapIcon}
+								height="64"
+								alt="BruinMap Logo"
+								loading="lazy"
+							/>
+						</Link>
+
+						{/* Simple Dropdown Menu */}
+						<DropdownMenu
+							user={user}
+							handleSignOut={handleSignOut}
+							handleResetPassword={handleResetPassword}
+							email={email}
+							setEmail={setEmail}
+							password={password}
+							setPassword={setPassword}
+							inputClass={inputClass}
+							buttonStyle={buttonStyle}
+							isDarkTheme={theme}
+							handleLogin={handleLogin}
+							handleSignUp={handleSignUp}
+						/>
+					</div>
+
+					{/* Sidebar */}
+					{!eventsSidebar && (
+						<button
+							className="sidebar-button"
+							type="button"
+							data-mdb-target="#navbarButtonsExample"
+							aria-controls="navbarButtonsExample"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
+							onClick={showSidebar}
+						>
+							{sidebar ? (
+								<FontAwesomeIcon
+									icon={faX}
+									style={{ color: "white", padding: "4px" }}
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faBars}
+									style={{ color: "white", padding: "4px" }}
+								/>
+							)}
+						</button>
+					)}
+					<Sidebar
+						sidebar={sidebar}
+						showSidebar={showSidebar}
+						isLoggedIn={isLoggedIn}
+						showEventsSidebar={showEventsSidebar}
+						style={{ height: "100%" }}
+						eventsSidebarFromSidebar={eventsSidebarFromSidebar}
+						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
+					/>
+					<EventsSidebar
+						eventsSidebar={eventsSidebar}
+						showEventsSidebar={showEventsSidebar}
+						isLoggedIn={isLoggedIn}
+						style={{ height: "100%" }}
+						showSidebar={showSidebar}
+						eventsSidebarFromSidebar={eventsSidebarFromSidebar}
+						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
+					/>
+					{/* Events */}
+					{!sidebar && !eventsSidebarFromSidebar && ( //BUG: HAMBURGER MENU DOES NOT DISAPPEAR AFTER CLICKING AN EVENT
+						<div class="collapse navbar-collapse" id="navbarButtonsExample">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+
+
+								</li>
+							</ul>
+
+							{/* Search bar and search icon */}
+							<span style={{ marginRight: "0px" }}>
+								<nav class="navbar navbar-dark">
+									<span class="container-fluid">
+										<SearchBar />
+										{/* Not using EventsButton.js, just using it inline w/ Srishti's method */}
+										<button
+											class="input-group-text border-0"
+											//href="#"
+											style={{
+												backgroundColor: "#0a87ca",
+												borderColor: "#024b76",
+												borderWidth: "1.5px",
+												boxShadow: "0 0 5px #0a87ca",
+												padding: "8px",
+												margin: "8px",
+												color: "white",
+												borderRadius: "8px"
+											}}
+											onClick={showEventsSidebar}
+										>
+											Events
+										</button>
+
+
+										<GitHubButton />
+									</span>
+								</nav>
+							</span>
+						</div>
+					)}
+				</nav>
+			</div>
+		</>
+	);
 };
-
-export default UnifiedNavbar;
+export default Navbar;
