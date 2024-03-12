@@ -328,6 +328,9 @@ const SearchResultsOverlay = ({ searchResults }) => {
 	);
 };
 
+
+
+
 // Map Component
 const MapComponent = () => {
 	const [selectedBuilding, setSelectedBuilding] = useState(null);
@@ -341,6 +344,39 @@ const MapComponent = () => {
 	const buildingData = useBuildingData();
 
 	const { user } = useAuth();
+
+
+	// State to hold the current mouse position
+	const [mousePosition, setMousePosition] = useState(null);
+
+	//DEMO ROOMS
+	const [rooms, setRooms] = useState([
+		{
+			id: 'sampleRoom',
+			name: 'Sample Room',
+			coords: [[34.0689, -118.4436], [34.069, -118.4436], [34.069, -118.443], [34.0689, -118.443]] // Replace these coordinates with the actual room's coordinates
+		}
+	]);
+
+	// Component to display mouse coordinates  ***DISABLE LATER****
+	const MouseCoordinatesDisplay = () => {
+		useMapEvents({
+			mousemove: (e) => {
+				setMousePosition(e.latlng);
+			}
+		});
+
+		if (!mousePosition) return null; // Don't display until we have a position
+
+		return (
+			<div style={{ position: 'absolute', top: '100px', right: '100px', zIndex: 1000, backgroundColor: '#fff', padding: '5px', borderRadius: '5px', boxShadow: '0 0 5px rgba(0,0,0,0.2)' }}>
+				Lat: {mousePosition.lat.toFixed(12)}, Lng: {mousePosition.lng.toFixed(12)}
+			</div>
+		);
+	};
+
+
+
 
 	const handleSaveEvent = async (event) => {
 		try {
@@ -523,7 +559,11 @@ const MapComponent = () => {
 					maxNativeZoom={18}
 					maxZoom={24}
 				/>
-
+				{rooms.map(room => (
+                    <Polygon key={room.id} positions={room.coords} color="blue" >
+                        <Popup>{room.name}</Popup>
+                    </Polygon>
+                ))}
 				{events.map((event) => (
 					<EventMarker
 						key={event._id}
@@ -531,7 +571,7 @@ const MapComponent = () => {
 						onSaveEvent={handleSaveEvent}
 					/>
 				))}
-
+				<MouseCoordinatesDisplay />
 				<BuildingPolygons
 					buildingData={buildingData}
 					handleBuildingClick={handleBuildingClick}
