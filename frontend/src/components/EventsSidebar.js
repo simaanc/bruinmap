@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Context/AuthContext";
-import "./Sidebar.css";
 import { EventData } from "./EventsData";
 import { Link } from "react-router-dom";
 import "./Sidebar.css";
@@ -9,115 +8,128 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 
 const EventsSidebar = ({
-  sidebar,
-  showSidebar,
-  eventsSidebar,
-  showEventsSidebar,
-  eventsSidebarFromSidebar,
-  setEventsSidebarFromSidebar,
-  isLoggedIn,
+	sidebar,
+	showSidebar,
+	eventsSidebar,
+	showEventsSidebar,
+	eventsSidebarFromSidebar,
+	setEventsSidebarFromSidebar,
+	isLoggedIn,
 }) => {
-  const { user } = useAuth();
-  const [userEvents, setUserEvents] = useState([]);
+	const { user } = useAuth();
+	const [userEvents, setUserEvents] = useState([]);
+	const [allEvents, setAllEvents] = useState([]);
 
-  useEffect(() => {
-    const fetchUserEvents = async () => {
-      try {
-        // Check if the user is logged in
-        if (!user) {
-          console.error("User is not logged in.");
-          return;
-        }
+	useEffect(() => {
+		const fetchUserEvents = async () => {
+			try {
+				// Check if the user is logged in
+				if (!user) {
+					console.error("User is not logged in.");
+					return;
+				}
 
-        // Make an API request to fetch the user's events from the server
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/events",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-        const events = response.data;
+				// Make an API request to fetch the user's events from the server
+				const response = await axios.get(
+					"http://localhost:5000/api/auth/events",
+					{
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
+					}
+				);
+				const events = response.data.events;
 
-        // Set the userEvents state to the events array
-        setUserEvents(events);
-      } catch (error) {
-        console.error("Error fetching user events:", error);
-      }
-    };
+				console.log("User events:", events);
+				console.log("Array check:", Array.isArray(events));
 
-    fetchUserEvents();
-  }, [user]);
+				// Set the userEvents state to the events array
+				setUserEvents(events);
+			} catch (error) {
+				console.error("Error fetching user events:", error);
+			}
+		};
 
-  return (
-    <div className="event-sidebar">
-      {/* Sidebar */}
-      <nav className={eventsSidebar ? "sidebar-menu active" : "sidebar-menu"}>
-        {/* Shows an 'X' if the main sidebar isn't open, or a left arrow if the main sidebar is open */}
-        <button
-          className="event-sidebar-button"
-          onClick={() =>
-            eventsSidebarFromSidebar
-              ? (showSidebar(),
-                showEventsSidebar(),
-                setEventsSidebarFromSidebar())
-              : showEventsSidebar()
-          }
-        >
-          {eventsSidebarFromSidebar ? (
-            <FontAwesomeIcon icon={faArrowLeft} className="fa-icon" />
-          ) : (
-            <FontAwesomeIcon icon={faX} className="fa-icon" />
-          )}
-        </button>
-        <ul
-          className="sidebar-menu-items event-options"
-          onClick={showEventsSidebar}
-        >
-          {/* Sidebar Items */}
-          {EventData
-            // First, filter out protected items if not logged in
-            .filter(item => isLoggedIn || !item.protected)
-            // Then, sort so that if logged in, protected items come first
-            .sort((a, b) => {
-              // When logged in, push protected items to the front
-              if (isLoggedIn) {
-                return a.protected === b.protected ? 0 : a.protected ? -1 : 1;
-              }
-              // If not logged in, this part won't be reached due to filter,
-              // but keep it for logical completeness
-              return 0;
-            })
-            .map((item, index) => {
-              if (item.type === "gitHubButton") {
-                // Render the SearchBar component for this special case
-                return (
-                  <li key={index} className={item.cName}>
-                    <h2>Saved Events</h2>
-                    <ul>
-                      {userEvents.map((event, index) => (
-                        <li key={index}>{event.title}</li>
-                      ))}
-                    </ul>
-                  </li>
-                );
-              } else {
-                // Render normal sidebar items
-                return (
-                  <li key={index} className={item.cName}>
-                    <Link to={item.path}>
-                      {item.icon}
-                      <span>{item.title}</span>
-                    </Link>
-                  </li>
-                );
-              }
-            })}
-        </ul>
-      </nav>
-    </div>
-  );
+		const fetchAllEvents = async () => {
+			try {
+				// Make an API request to fetch all events from the server
+				const response = await axios.get("http://localhost:5000/events");
+				const events = response.data;
+
+				console.log("All events:", events);
+				console.log("Array check:", Array.isArray(events));
+
+				// Set the allEvents state to the events array
+				setAllEvents(events);
+			} catch (error) {
+				console.error("Error fetching all events:", error);
+			}
+		};
+
+		fetchUserEvents();
+		fetchAllEvents();
+	}, [user]);
+
+	// Filter out user's saved events from all events
+	const nonSavedEvents = allEvents.filter(
+		(event) => !userEvents.some((savedEvent) => savedEvent._id === event._id)
+	);
+
+	return (
+		<div className="event-sidebar">
+			{/* Sidebar */}
+			<nav className={eventsSidebar ? "sidebar-menu active" : "sidebar-menu"}>
+				{/* Shows an 'X' if the main sidebar isn't open, or a left arrow if the main sidebar is open */}
+				<button
+					className="event-sidebar-button"
+					onClick={() =>
+						eventsSidebarFromSidebar
+							? (showSidebar(),
+							  showEventsSidebar(),
+							  setEventsSidebarFromSidebar())
+							: showEventsSidebar()
+					}
+				>
+					{eventsSidebarFromSidebar ? (
+						<FontAwesomeIcon icon={faArrowLeft} className="fa-icon" />
+					) : (
+						<FontAwesomeIcon icon={faX} className="fa-icon" />
+					)}
+				</button>
+				<ul
+					className="sidebar-menu-items event-options"
+					onClick={showEventsSidebar}
+				>
+					{/* Saved Events */}
+					<li className="sidebar-text">
+						<h2>Saved Events</h2>
+						{Array.isArray(userEvents) && userEvents.length > 0 ? (
+							<ul>
+								{userEvents.map((event, index) => (
+									<li key={index}>{event.name}</li>
+								))}
+							</ul>
+						) : (
+							<p>No saved events</p>
+						)}
+					</li>
+
+					<li className="sidebar-text">
+						<h2>All Events</h2>
+						{nonSavedEvents.length > 0 ? (
+							<ul>
+								{nonSavedEvents.map((event, index) => (
+									<li key={index}>{event.name}</li>
+								))}
+							</ul>
+						) : (
+							<p>No events available</p>
+						)}
+					</li>
+				</ul>
+			</nav>
+		</div>
+	);
 };
 
 export default EventsSidebar;

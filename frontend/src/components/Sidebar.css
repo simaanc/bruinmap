@@ -67,6 +67,21 @@
 	width: 100%;
 }
 
+/* Sidebar text */
+.sidebar-text {
+	color: #ffffff; /* Set the desired text color */
+}
+
+/* Heading inside sidebar text */
+.sidebar-text h2 {
+	color: #ffffff; /* Set the desired color for the h2 elements */
+}
+
+/* List items inside sidebar text */
+.sidebar-text ul li {
+	color: #ffffff; /* Set the desired color for the list items */
+}
+
 .sidebar-text {
 	display: flex;
 	align-items: center;
@@ -75,7 +90,6 @@
 	/* Aligns the text to the left */
 	/* Additional styling here */
 }
-
 
 .content {
 	flex-grow: 1;
