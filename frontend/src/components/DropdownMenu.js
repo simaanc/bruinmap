@@ -63,11 +63,12 @@ const DropdownMenu = ({
 	return (
 		<>
 			{isDropdownOpen && <div className="blur-overlay"></div>}
-			<Dropdown onToggle={handleDropdownToggle}>
+			<Dropdown onToggle={handleDropdownToggle} style={{zIndex:"999"}}>
 				<Dropdown.Toggle
 					variant="primary"
 					id="dropdown-basic"
 					className={`dropdown-toggle ${themeClass}`}
+					
 				>
 					{user ? <FontAwesomeIcon icon={faUser} /> : "Sign In"}
 				</Dropdown.Toggle>

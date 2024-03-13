@@ -31,6 +31,7 @@
 .leaflet-container {
 	height: 400px; /* Or any other height */
 	width: 100%;
+	z-index: 9;
 }
 
 .room-label {
@@ -81,6 +82,7 @@
 .leaflet-control-zoom-out {
 	line-height: 20px; /* Adjust the line height to center the text vertically */
 	text-align: center; /* Center the text horizontally */
+	z-index: 1;
 }
 
 /* Additional styles if you need to adjust the positioning */
@@ -89,6 +91,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 1;
 }
 
 @keyframes App-logo-spin {
