@@ -11,13 +11,13 @@ export const SidebarData = [
 	{
 		type: "searchBar",
 	},
-	{
-		title: "Home",
-		path: "/",
-		icon: <FontAwesomeIcon icon={faHome} style={{ margin: "8px" }} />,
-		cName: "sidebar-text",
-		protected: false,
-	},
+	// {
+	// 	title: "Home",
+	// 	path: "/",
+	// 	icon: <FontAwesomeIcon icon={faHome} style={{ margin: "8px" }} />,
+	// 	cName: "sidebar-text",
+	// 	protected: false,
+	// },
 	{
 		title: "Events",
 		path: "/",
