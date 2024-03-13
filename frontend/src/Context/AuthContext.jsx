@@ -19,6 +19,7 @@ export const AuthContextProvider = ({ children }) => {
     } catch (err) {
       setError(err.response.data.message);
       console.error("Error creating user: ", err.response.data.message);
+      throw(err.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -42,11 +43,15 @@ export const AuthContextProvider = ({ children }) => {
       const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token);
-      setUser(response.data.user);
-      navigate('/');
+      // Assuming setUser and navigate are available in this context
+      setUser(response.data.user); // Update user state with the signed-in user's information
+      navigate('/'); // Navigate to the home page or dashboard
     } catch (err) {
-      setError(err.response.data.message);
-      console.log(err.response.data.message);
+      // Log the error message for debugging purposes
+      console.error('Login failed:', err.response ? err.response.data.message : err.message);
+  
+      // Re-throw the error to allow it to be caught by the caller of signIn
+      throw err;
     }
   };
 

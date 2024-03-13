@@ -37,6 +37,7 @@ const DropdownMenu = ({
 	isDarkTheme,
 	handleLogin, // Passed from Navbar.js
 	handleSignUp, // Passed from Navbar.js
+	loginError,
 }) => {
 	useEffect(() => {
 		// Function now sets class-based styling for placeholders
@@ -61,79 +62,84 @@ const DropdownMenu = ({
 
 	return (
 		<>
-		{isDropdownOpen && <div className="blur-overlay"></div>}
-		<Dropdown onToggle={handleDropdownToggle}>
-			<Dropdown.Toggle
-				variant="primary"
-				id="dropdown-basic"
-				className={`dropdown-toggle ${themeClass}`}
-			>
-				{user ? <FontAwesomeIcon icon={faUser} /> : "Sign In"}
-			</Dropdown.Toggle>
+			{isDropdownOpen && <div className="blur-overlay"></div>}
+			<Dropdown onToggle={handleDropdownToggle}>
+				<Dropdown.Toggle
+					variant="primary"
+					id="dropdown-basic"
+					className={`dropdown-toggle ${themeClass}`}
+				>
+					{user ? <FontAwesomeIcon icon={faUser} /> : "Sign In"}
+				</Dropdown.Toggle>
 
-			<Dropdown.Menu className={`dropdown-menu ${themeClass}`}>
-				{user ? (
-					<>
-						{/* <Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
+				<Dropdown.Menu className={`dropdown-menu ${themeClass}`}>
+					{user ? (
+						<>
+							{/* <Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
 						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-2">Another action</Dropdown.Item> */}
-						<Button
-							type="button"
-							variant="outline-danger"
-							onClick={handleSignOut}
-							className="logout-button"
-						>
-							Logout
-						</Button>
-					</>
-				) : (
-					<Form
-						inline={true}
-						className="ml-auto"
-						onSubmit={(e) => e.preventDefault()}
-					>
-						<SignInField
-							type="email"
-							placeholder="Email"
-							className={`mr-sm-2 ${inputClass} ${themeClass}`}
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							autoComplete="email"
-						/>
-						<SignInField
-							type="password"
-							placeholder="Password"
-							className={`mr-sm-2 ${inputClass} ${themeClass}`}
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							autoComplete="current-password"
-						/>
-						<Col xs="auto">
-							<div className="d-flex"></div>
 							<Button
-								variant="outline-success"
-								className="mr-2 log-in-button"
-								onClick={handleLogin}
+								type="button"
+								variant="outline-danger"
+								onClick={handleSignOut}
+								className="logout-button"
 							>
-								Log In
+								Logout
 							</Button>
-							<Button
-								variant="outline-primary"
-								className="sign-up-button"
-								onClick={handleSignUp}
-							>
-								Sign Up
-							</Button>
-						</Col>
-						<Dropdown.Item
-							onClick={handleResetPassword}
-							className="forgot-password"
+						</>
+					) : (
+						<Form
+							inline={true}
+							className="ml-auto"
+							onSubmit={(e) => e.preventDefault()}
 						>
-							Forgot Password?
-						</Dropdown.Item>
-					</Form>
-				)}
-			</Dropdown.Menu>
-		</Dropdown>
+							<SignInField
+								type="email"
+								placeholder="Email"
+								className={`mr-sm-2 ${inputClass} ${themeClass}`}
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								autoComplete="email"
+							/>
+							<SignInField
+								type="password"
+								placeholder="Password"
+								className={`mr-sm-2 ${inputClass} ${themeClass}`}
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								autoComplete="current-password"
+							/>
+							<Col xs="auto">
+								<div className="d-flex"></div>
+								<Button
+									variant="outline-success"
+									className="mr-2 log-in-button"
+									onClick={() => {
+										handleLogin(email, password);
+									  }}
+								>
+									Log In
+								</Button>
+								
+								<Button
+									variant="outline-primary"
+									className="sign-up-button"
+									onClick={handleSignUp}
+								>
+									Sign Up
+								</Button>
+
+							</Col>
+							{loginError && <div className="text-danger mt-2" style={{textAlign: "center"}}>Login failed. Please try again.</div>}
+							<Dropdown.Item
+								onClick={handleResetPassword}
+								className="forgot-password"
+							>
+								Forgot Password?
+							</Dropdown.Item>
+						</Form>
+					)}
+				</Dropdown.Menu>
+			</Dropdown>
 		</>
 	);
 };
