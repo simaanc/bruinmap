@@ -15,16 +15,16 @@ export const AuthContextProvider = ({ children }) => {
   const createUser = async (email, password) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/signup`,
-        { email, password }
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, {
+        email,
+        password,
+      });
       setUser(response.data.user);
       navigate("/");
     } catch (err) {
       setError(err.response.data.message);
       console.error("Error creating user: ", err.response.data.message);
-      throw(err.response.data.message);
+      throw err.response.data.message;
     } finally {
       setLoading(false);
     }
@@ -38,11 +38,12 @@ export const AuthContextProvider = ({ children }) => {
       });
       alert("Password reset email sent!");
     } catch (err) {
-      setError(err.response.data.message);
+      setError(err.response?.data?.message || "An error occurred");
       console.error(
         "Error sending password reset email: ",
-        err.response.data.message
+        err.response?.data?.message || err.message
       );
+      alert("Failed to send password reset email. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -50,17 +51,17 @@ export const AuthContextProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/signin`,
-        { email, password }
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/auth/signin`, {
+        email,
+        password,
+      });
       const { user, token } = response.data;
       localStorage.setItem("token", token);
       setUser(user);
       navigate("/");
     } catch (err) {
       console.error(err);
-      throw(err);
+      throw err;
     }
   };
 

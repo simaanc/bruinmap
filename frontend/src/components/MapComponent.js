@@ -99,7 +99,7 @@ const roomStyle = {
 
 const buildingStyle = {
   color: "grey",
-  fillColor: "white",
+  fillColor: "#c0c0c0",
   fillOpacity: 0.7,
   weight: 1,
 };
