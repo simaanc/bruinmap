@@ -17,6 +17,8 @@ const SearchBar = () => {
     const value = event.target.value;
     setSearchTerm(value);
 
+	
+
     if (value.trim() !== "") {
       try {
         const response = await axios.get(
@@ -54,6 +56,13 @@ const SearchBar = () => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && suggestions.length === 1) {
+      event.preventDefault(); // Prevent form submission
+      handleSuggestionClick(suggestions[0]); // Automatically select the suggestion
+    }
+  };
+
   const handleSuggestionClick = (suggestion) => {
 	setSearchTerm(suggestion.name);
 	setSuggestions([]);
@@ -84,6 +93,7 @@ const SearchBar = () => {
           aria-describedby="search-addon"
           value={searchTerm}
           onChange={handleChange}
+		  onKeyDown={handleKeyDown} // Added key down handler
           style={{
             backgroundColor: "#f1f2f3",
             width: "300px",
