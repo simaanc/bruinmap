@@ -1,21 +1,26 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AuthContext = createContext();
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const createUser = async (email, password) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', { email, password });
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/signup`,
+        { email, password }
+      );
       setUser(response.data.user);
-      navigate('/');
+      navigate("/");
     } catch (err) {
       setError(err.response.data.message);
       console.error("Error creating user: ", err.response.data.message);
@@ -28,11 +33,16 @@ export const AuthContextProvider = ({ children }) => {
   const resetPassword = async (email) => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/auth/reset-password', { email });
-      alert('Password reset email sent!');
+      await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
+        email,
+      });
+      alert("Password reset email sent!");
     } catch (err) {
       setError(err.response.data.message);
-      console.error("Error sending password reset email: ", err.response.data.message);
+      console.error(
+        "Error sending password reset email: ",
+        err.response.data.message
+      );
     } finally {
       setLoading(false);
     }
@@ -40,27 +50,47 @@ export const AuthContextProvider = ({ children }) => {
 
   const signIn = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      // Assuming setUser and navigate are available in this context
-      setUser(response.data.user); // Update user state with the signed-in user's information
-      navigate('/'); // Navigate to the home page or dashboard
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/signin`,
+        { email, password }
+      );
+      const { user, token } = response.data;
+      localStorage.setItem("token", token);
+      setUser(user);
+      navigate("/");
     } catch (err) {
-      // Log the error message for debugging purposes
-      console.error('Login failed:', err.response ? err.response.data.message : err.message);
-  
-      // Re-throw the error to allow it to be caught by the caller of signIn
-      throw err;
+      console.error(err);
     }
   };
+
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Set the default Authorization header for all requests
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        const response = await axios.get(`${API_BASE_URL}/api/auth/me`);
+        setUser(response.data.user);
+      }
+    } catch (err) {
+      console.error(err);
+      localStorage.removeItem("token");
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
   const logout = async () => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/auth/signout');
+      await axios.post(`${API_BASE_URL}/api/auth/signout`);
+      localStorage.removeItem("token");
       setUser(null);
-      navigate('/');
+      navigate("/");
     } catch (err) {
       setError(err.response.data.message);
       console.error("Error signing out: ", err.response.data.message);
@@ -72,10 +102,15 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/me');
-        setUser(response.data.user);
-      } catch (err) {
-        setUser(null);
+        const token = localStorage.getItem("token");
+        if (token) {
+          const response = await axios.get(`${API_BASE_URL}/api/auth/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUser(response.data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
       } finally {
         setLoading(false);
       }
@@ -85,7 +120,16 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   const isLoggedIn = !!user;
-  const value = { user, isLoggedIn, signIn, logout, loading, error, createUser, resetPassword };
+  const value = {
+    user,
+    isLoggedIn,
+    signIn,
+    logout,
+    loading,
+    error,
+    createUser,
+    resetPassword,
+  };
 
   return (
     <AuthContext.Provider value={value}>

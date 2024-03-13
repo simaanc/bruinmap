@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Col, Button, Form, Dropdown, FormControl } from "react-bootstrap";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../Context/AuthContext.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 import BruinMapIcon from "../Assets/bruinmaplogo.svg";
@@ -22,7 +21,6 @@ const Navbar = () => {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [isSigningUp, setIsSigningUp] = useState(false);
 	const [inputClass, setInputClass] = useState(""); // State for input classes
 
 	const buttonStyle =
@@ -30,14 +28,6 @@ const Navbar = () => {
 			? { backgroundColor: "#0a87ca" } // Blue background when both fields are filled
 			: { backGroundColor: "grey" }; // Grey background when either field is empty
 
-
-
-
-	// For the search bar
-	const [placeholder, setPlaceholder] = useState("Search");
-
-	const handleFocus = () => setPlaceholder("Enter room # or building...");
-	const handleBlur = () => setPlaceholder("Search");
 	const theme = useThemeDetector();
 
 	// For the sidebar

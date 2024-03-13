@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import MapComponent from "./components/MapComponent";
 import Navbar from "./components/Navbar";
-import { useAuth} from "./Context/AuthContext"; // Adjust the import path as necessary
-import './App.css'; // Make sure this path is correct
+import { useAuth } from "./Context/AuthContext";
+import "./App.css";
 
 function Home() {
   const { user } = useAuth();
