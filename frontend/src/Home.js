@@ -1,11 +1,11 @@
 import React from "react";
 import MapComponent from "./components/MapComponent";
 import Navbar from "./components/Navbar";
-import { useAuth } from "./Context/AuthContext";
+//import { useAuth } from "./Context/AuthContext";
 import "./App.css";
 
 function Home() {
-  const { user } = useAuth();
+//  const { user } = useAuth();
 
   return (
     <div className="home-container">

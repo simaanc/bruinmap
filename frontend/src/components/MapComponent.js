@@ -6,7 +6,6 @@ import {
   Popup,
   Pane,
   useMap,
-  useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -15,9 +14,6 @@ import EventMarker from "./EventMarker";
 import { useAuth } from "../Context/AuthContext";
 import { useThemeDetector } from "./utils";
 import polylabel from "@mapbox/polylabel";
-import { Button } from "react-bootstrap";
-
-require('dotenv')
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -273,63 +269,63 @@ const RoomPolygon = ({ room, zoomLevel }) => {
   );
 };
 
-const PolygonDrawer = () => {
-  const [polygonPoints, setPolygonPoints] = useState([]);
+// const PolygonDrawer = () => {
+//   const [polygonPoints, setPolygonPoints] = useState([]);
 
-  useMapEvents({
-    click: (e) => {
-      const newPoint = [e.latlng.lat, e.latlng.lng];
-      setPolygonPoints((points) => [...points, newPoint]);
-    },
-    dblclick: () => {
-      // Output the polygon points to the console
-      console.log(polygonPoints);
-      // Optionally, reset the polygonPoints to start drawing a new polygon
-      setPolygonPoints([]);
-    },
-  });
+//   useMapEvents({
+//     click: (e) => {
+//       const newPoint = [e.latlng.lat, e.latlng.lng];
+//       setPolygonPoints((points) => [...points, newPoint]);
+//     },
+//     dblclick: () => {
+//       // Output the polygon points to the console
+//       console.log(polygonPoints);
+//       // Optionally, reset the polygonPoints to start drawing a new polygon
+//       setPolygonPoints([]);
+//     },
+//   });
 
-  return polygonPoints.length > 0 ? (
-    <Polygon positions={polygonPoints} />
-  ) : null;
-};
+//   return polygonPoints.length > 0 ? (
+//     <Polygon positions={polygonPoints} />
+//   ) : null;
+// };
 
-function MapClickLogger() {
-  useMapEvents({
-    click: (e) => {
-      const { lat, lng } = e.latlng;
-      console.log(`Clicked at latitude: ${lat}, longitude: ${lng}`);
-    },
-  });
+// function MapClickLogger() {
+//   useMapEvents({
+//     click: (e) => {
+//       const { lat, lng } = e.latlng;
+//       console.log(`Clicked at latitude: ${lat}, longitude: ${lng}`);
+//     },
+//   });
 
-  return null; // This component does not render anything.
-}
+//   return null; // This component does not render anything.
+// }
 
-const MouseCoordinateDisplay = () => {
-  const [coords, setCoords] = useState([0, 0]);
+// const MouseCoordinateDisplay = () => {
+//   const [coords, setCoords] = useState([0, 0]);
 
-  useMapEvents({
-    mousemove: (e) => {
-      setCoords([e.latlng.lat, e.latlng.lng]);
-    },
-  });
+//   useMapEvents({
+//     mousemove: (e) => {
+//       setCoords([e.latlng.lat, e.latlng.lng]);
+//     },
+//   });
 
-  return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: "90px",
-        right: "10px",
-        zIndex: 1000,
-        background: "white",
-        padding: "8px",
-        borderRadius: "5px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-      }}>
-      Lat: {coords[0].toFixed(7)}, Lng: {coords[1].toFixed(7)}
-    </div>
-  );
-};
+//   return (
+//     <div
+//       style={{
+//         position: "absolute",
+//         bottom: "90px",
+//         right: "10px",
+//         zIndex: 1000,
+//         background: "white",
+//         padding: "8px",
+//         borderRadius: "5px",
+//         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+//       }}>
+//       Lat: {coords[0].toFixed(7)}, Lng: {coords[1].toFixed(7)}
+//     </div>
+//   );
+// };
 
 const SearchResultsOverlay = ({ searchResults }) => {
   return (
@@ -385,7 +381,6 @@ const MapComponent = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [userEvents, setUserEvents] = useState([]);
   
   const handleDeleteEvent = async (event, callback) => {
     try {
@@ -414,26 +409,6 @@ const MapComponent = () => {
   const buildingData = useBuildingData();
 
   const { user } = useAuth();
-
-  const fetchUserEvents = async () => {
-    try {
-      if (!user) {
-        console.error("User is not logged in.");
-        return;
-      }
-
-      const response = await axios.get(`${API_BASE_URL}/api/auth/events`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const events = response.data.events;
-
-      setUserEvents(events);
-    } catch (error) {
-      console.error("Error fetching user events:", error);
-    }
-  };
 
   const handleSaveEvent = async (event, callback) => {
     try {
@@ -576,7 +551,7 @@ const MapComponent = () => {
         setSearchResults([]);
       }
     },
-    [buildingData, handleBuildingClick]
+    [buildingData, handleBuildingClick, selectedBuilding]
   );
 
   useEffect(() => {
@@ -608,10 +583,6 @@ const MapComponent = () => {
 
     fetchEvents();
   }, []);
-
-  const isEventSaved = (event) => {
-    return userEvents.some((savedEvent) => savedEvent._id === event._id);
-  };
 
   useEffect(() => {
     const handleSearchEvent = (event) => {
@@ -698,7 +669,6 @@ const MapComponent = () => {
             marker={event}
             selectedEvent={selectedEvent}
             onPopupClose={handlePopupClose}
-            userEvents={userEvents}
             handleSaveEvent={handleSaveEvent}
             handleDeleteEvent={handleDeleteEvent}
           />
