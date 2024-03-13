@@ -390,6 +390,9 @@ const MapComponent = () => {
   };
 
   const handleBuildingClick = useCallback((building) => {
+	// if (selectedBuilding === building) {
+	// 	return;
+	// }
     const sortedFloors = [...building.floors].sort((a, b) =>
       a.name.localeCompare(b.name)
     );
@@ -459,15 +462,19 @@ const MapComponent = () => {
         if (suggestion && suggestion.type === "building") {
           handleBuildingClick(building);
         }
+		if (!selectedBuilding) {
+			setSelectedBuilding(building);
+		}
         // Find the room based on the extracted room number and building
         const room = building.floors
           .flatMap((floor) => floor.rooms)
           .find((room) => room.name === roomNumber);
 
-        if (room && room.coords) {
-          const floorForRoom = building.floors.find((floor) =>
-            floor.rooms.some((r) => r.name === room.name)
-          );
+		  if (room && room.coords) {
+			const floorForRoom = building.floors.find((floor) =>
+			  floor.rooms.some((r) => r.name === room.name)
+			);
+			
 
           setSelectedFloor(floorForRoom.name);
 
