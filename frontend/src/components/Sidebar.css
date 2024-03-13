@@ -70,6 +70,13 @@
 /* Sidebar text */
 .sidebar-text {
 	color: #ffffff; /* Set the desired text color */
+
+}
+
+/* Sidebar text */
+.event-header-text {
+	color: #ffffff; /* Set the desired text color */
+	display: block;
 }
 
 /* Heading inside sidebar text */

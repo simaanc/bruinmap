@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { EventData } from "./EventsData";
 import { Link } from "react-router-dom";
-import "./Sidebar.css";
+import "./EventSidebar.css";
 import { faArrowLeft, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -101,8 +101,8 @@ const EventsSidebar = ({
 					onClick={showEventsSidebar}
 				>
 					{/* Saved Events */}
-					<li className="sidebar-text">
-						<h2>Saved Events</h2>
+					<li className="event-text">
+						<h2 className="event-header-text" style={{marginTop:"24px"}}>Saved Events</h2>
 						{Array.isArray(userEvents) && userEvents.length > 0 ? (
 							<ul>
 								{userEvents.map((event, index) => (
@@ -114,8 +114,8 @@ const EventsSidebar = ({
 						)}
 					</li>
 
-					<li className="sidebar-text">
-						<h2>All Events</h2>
+					<li className="event-text">
+						<h2 className="event-header-text">All Events</h2>
 						{nonSavedEvents.length > 0 ? (
 							<ul>
 								{nonSavedEvents.map((event, index) => (

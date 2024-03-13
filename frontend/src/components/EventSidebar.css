@@ -1,0 +1,42 @@
+/* General event styling */
+.event-text {
+    padding: 10px;
+    list-style-type: none; /* Removes the default bullet points */
+    color: #e0e0e0
+  }
+  
+  /* Header text styling */
+  .event-header-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e0e0e0;
+    margin-bottom: 5px; /* Space between the header and the list */
+    border-bottom: 1px solid #e0e0e0; /* Adds a subtle line between sections */
+  }
+  
+  /* Styling for the list of events */
+  .event-text ul {
+    margin-left: 16px;
+    padding: 0; /* Removes default padding */
+    margin-top: 0; /* Adjusts spacing to the header */
+    margin-bottom: 10px; /* Extra space below the list */
+    
+  }
+  
+  .event-text ul li {
+    padding: 5px 0; /* Adds some vertical padding for each list item */
+    font-size: 16px; /* Slightly smaller text for the list items */
+    
+  }
+  
+  .event-text ul li:last-child {
+    border-bottom: none; /* Removes the bottom border from the last item */
+  }
+  
+  /* Placeholder text styling */
+  .event-text p {
+    font-size: 16px;
+    color: #666; /* Lighter text color for placeholders */
+    margin-top: 5px; /* Ensures consistent spacing */
+  }
+  
