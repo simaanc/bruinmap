@@ -14,6 +14,9 @@ import axios from "axios";
 import EventMarker from "./EventMarker";
 import { useAuth } from "../Context/AuthContext";
 import { useThemeDetector } from "./utils";
+import polylabel from "polylabel";
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const calculatePolygonPixelBounds = (map, positions) => {
   const points = positions.map((pos) => map.latLngToLayerPoint(L.latLng(pos)));
@@ -26,7 +29,7 @@ const calculatePolygonPixelBounds = (map, positions) => {
   return { width: maxX - minX, height: maxY - minY };
 };
 
-const DivIcon = ({ positions, text, isVisible, onIconClick }) => {
+const DivIcon = ({ positions, text, isVisible, onIconClick, building, zoomLevel }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -36,9 +39,19 @@ const DivIcon = ({ positions, text, isVisible, onIconClick }) => {
 
     // Use the external calculatePolygonPixelBounds function.
     const polygonBounds = calculatePolygonPixelBounds(map, positions);
-    const center = calculateCenter(positions);
 
-    const iconHtml = `<div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; background: transparent; border: none; font-size: 12px; text-align: center;">${text}</div>`;
+    // Use the center from the building if available and valid, otherwise use polylabel to calculate the center
+    const center = building && building.center && building.center.length === 2
+      ? building.center
+      : polylabel([positions], 1.0);
+
+    // Calculate the appropriate font size based on the polygon bounds and zoom level
+    const baseFontSize = Math.min(polygonBounds.width, polygonBounds.height) * 0.1;
+    const fontSize = zoomLevel <= 18
+      ? baseFontSize
+      : Math.max(10, baseFontSize * (1 - (zoomLevel - 18) * 0.1));
+
+    const iconHtml = `<div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; background: transparent; border: none; font-size: ${fontSize}px; text-align: center;">${text}</div>`;
     const icon = L.divIcon({
       html: iconHtml,
       className: "custom-div-icon", // Ensure this class is defined in your CSS
@@ -54,7 +67,7 @@ const DivIcon = ({ positions, text, isVisible, onIconClick }) => {
       marker.off("click", onIconClick);
       marker.remove();
     };
-  }, [map, positions, text, isVisible, onIconClick]);
+  }, [map, positions, text, isVisible, onIconClick, building, zoomLevel]);
 
   return null;
 };
@@ -100,7 +113,7 @@ function useBuildingData() {
 
     async function fetchBuildingData() {
       try {
-        const response = await axios.get("http://localhost:5000/buildings");
+        const response = await axios.get(`${API_BASE_URL}/buildings`);
         if (isSubscribed) {
           // Only update state if the component is still mounted
           setBuildingData(response.data);
@@ -186,6 +199,7 @@ const BuildingPolygons = ({
           (selectedBuilding && zoomLevel <= 19 && zoomLevel > 16)
         }
         onIconClick={() => handleBuildingClick(building)}
+        building={building} // Pass the building object as a prop
       />
 
       {selectedBuilding &&
@@ -357,6 +371,7 @@ const MapComponent = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const mapRef = useRef(null);
   const buildingData = useBuildingData();
@@ -372,7 +387,7 @@ const MapComponent = () => {
 
       // Make an API request to save the event to the user's events array
       await axios.post(
-        "http://localhost:5000/api/auth/save-event",
+        `${API_BASE_URL}/api/auth/save-event`,
         {
           eventId: event._id,
         },
@@ -390,9 +405,9 @@ const MapComponent = () => {
   };
 
   const handleBuildingClick = useCallback((building) => {
-	// if (selectedBuilding === building) {
-	// 	return;
-	// }
+    // if (selectedBuilding === building) {
+    // 	return;
+    // }
     const sortedFloors = [...building.floors].sort((a, b) =>
       a.name.localeCompare(b.name)
     );
@@ -462,19 +477,18 @@ const MapComponent = () => {
         if (suggestion && suggestion.type === "building") {
           handleBuildingClick(building);
         }
-		if (!selectedBuilding) {
-			setSelectedBuilding(building);
-		}
+        if (!selectedBuilding) {
+          setSelectedBuilding(building);
+        }
         // Find the room based on the extracted room number and building
         const room = building.floors
           .flatMap((floor) => floor.rooms)
           .find((room) => room.name === roomNumber);
 
-		  if (room && room.coords) {
-			const floorForRoom = building.floors.find((floor) =>
-			  floor.rooms.some((r) => r.name === room.name)
-			);
-			
+        if (room && room.coords) {
+          const floorForRoom = building.floors.find((floor) =>
+            floor.rooms.some((r) => r.name === room.name)
+          );
 
           setSelectedFloor(floorForRoom.name);
 
@@ -506,9 +520,26 @@ const MapComponent = () => {
   );
 
   useEffect(() => {
+    const handleEventClick = (e) => {
+      const event = e.detail;
+      if (event && event.coords) {
+        const [lat, lng] = event.coords;
+        mapRef.current.setView([lat, lng], 22);
+        setSelectedEvent(event);
+      }
+    };
+
+    window.addEventListener("eventClick", handleEventClick);
+
+    return () => {
+      window.removeEventListener("eventClick", handleEventClick);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/events");
+        const response = await axios.get(`${API_BASE_URL}/events`);
         setEvents(response.data);
       } catch (error) {
         console.error("Failed to fetch events:", error);
@@ -530,6 +561,10 @@ const MapComponent = () => {
       window.removeEventListener("search", handleSearchEvent);
     };
   }, [handleSearch]);
+
+  const handlePopupClose = () => {
+    setSelectedEvent(null);
+  };
 
   useEffect(() => {
     if (mapRef.current) {
@@ -598,6 +633,8 @@ const MapComponent = () => {
             key={event._id}
             marker={event}
             onSaveEvent={handleSaveEvent}
+            selectedEvent={selectedEvent}
+            onPopupClose={handlePopupClose}
           />
         ))}
 

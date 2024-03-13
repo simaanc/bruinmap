@@ -1,10 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faLocationDot,
 	faHome,
 	faCalendarDays,
-	faBookmark
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import "./Sidebar.css";

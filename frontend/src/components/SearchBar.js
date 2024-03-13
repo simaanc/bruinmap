@@ -3,12 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 // Search Bar Component
 const SearchBar = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [placeholder, setPlaceholder] = useState("Search");
 	const [suggestions, setSuggestions] = useState([]);
-	const [currentSuggestion, setCurrentSuggestion] = useState(null);
 
 	const handleFocus = () => setPlaceholder("Enter room # or building...");
 	const handleBlur = () => setPlaceholder("Search");
@@ -22,7 +23,7 @@ const SearchBar = () => {
 		if (value.trim() !== "") {
 			try {
 				const response = await axios.get(
-					`http://localhost:5000/api/search?term=${encodeURIComponent(value)}`
+					`${API_BASE_URL}/api/search?term=${encodeURIComponent(value)}`
 				);
 
 				const suggestions = response.data.filter((suggestion) =>

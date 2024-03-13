@@ -28,6 +28,11 @@
     font-size: 16px; /* Slightly smaller text for the list items */
     
   }
+
+  .event-text li:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
   
   .event-text ul li:last-child {
     border-bottom: none; /* Removes the bottom border from the last item */

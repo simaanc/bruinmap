@@ -8,7 +8,7 @@ function App() {
   return (
     <div>
       <AuthContextProvider>
-<Home />
+        <Home />
       </AuthContextProvider>
     </div>
   );
