@@ -14,8 +14,10 @@ import axios from "axios";
 import EventMarker from "./EventMarker";
 import { useAuth } from "../Context/AuthContext";
 import { useThemeDetector } from "./utils";
-import polylabel from "polylabel";
+import polylabel from "@mapbox/polylabel";
 import { Button } from "react-bootstrap";
+
+require('dotenv')
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
