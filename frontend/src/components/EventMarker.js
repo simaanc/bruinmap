@@ -11,15 +11,12 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const EventMarker = ({
   marker,
   selectedEvent,
-  onPopupClose,
   handleSaveEvent,
   handleDeleteEvent,
 }) => {
   const { user } = useAuth();
   const markerRef = useRef(null);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isEventSaved, setIsEventSaved] = useState(false);
-  const [userEvents, setUserEvents] = useState([]);
 
   useEffect(() => {
     const fetchUserEvents = async () => {
@@ -36,7 +33,6 @@ const EventMarker = ({
         });
         const events = response.data.events;
 
-        setUserEvents(events);
         setIsEventSaved(events.some((savedEvent) => savedEvent._id === marker._id));
       } catch (error) {
         console.error("Error fetching user events:", error);
@@ -49,18 +45,16 @@ const EventMarker = ({
   const handleMarkerClick = () => {
     if (markerRef.current) {
       markerRef.current.openPopup();
-      setIsPopupOpen(true);
     }
   };
 
   const handlePopupClose = () => {
-    setIsPopupOpen(false);
-  };
+  //Placeholder
+};
 
   useEffect(() => {
     if (selectedEvent && selectedEvent._id === marker._id && markerRef.current) {
       markerRef.current.openPopup();
-      setIsPopupOpen(true);
     }
   }, [selectedEvent, marker]);
 

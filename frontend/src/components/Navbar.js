@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 import BruinMapIcon from "../Assets/bruinmaplogo.svg";
 import "./Navbar.css";
-import SearchBar from "./SearchBar";
-import GitHubButton from "./GitHubButton";
+import SearchBar from "./SearchBar.js";
+import GitHubButton from "./GitHubButton.js";
 import Sidebar from "./Sidebar.js";
 import DropdownMenu from "./DropdownMenu.js";
-import { useThemeDetector } from "./utils";
+import { useThemeDetector } from "./utils.js";
 import EventsSidebar from "./EventsSidebar.js";
 import axios from "axios";
 
@@ -22,7 +22,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [inputClass, setInputClass] = useState(""); // State for input classes
 
   const buttonStyle =
     email && password // For the "Sign In" button
@@ -43,11 +42,6 @@ const Navbar = () => {
   };
   const [eventsSidebarFromSidebar, setEventsSidebarFromSidebar] =
     useState(false);
-
-  const triggerShakeAnimation = () => {
-    setInputClass("animate__animated animate__shakeX");
-    setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
-  };
 
   //For login errors
   const [loginError, setLoginError] = useState(false);
@@ -152,7 +146,6 @@ const Navbar = () => {
               setEmail={setEmail}
               password={password}
               setPassword={setPassword}
-              inputClass={inputClass}
               buttonStyle={buttonStyle}
               isDarkTheme={theme}
               handleLogin={handleLogin}

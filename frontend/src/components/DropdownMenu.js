@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Dropdown, DropdownHeader, DropdownItem, Form, FormControl } from "react-bootstrap";
+import { Button, Col, Dropdown, DropdownHeader, Form, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import "./Dropdown.css";
@@ -33,7 +33,6 @@ const DropdownMenu = ({
 	password,
 	setPassword,
 	inputClass,
-	buttonStyle,
 	isDarkTheme,
 	handleLogin,
 	handleSignUp,
