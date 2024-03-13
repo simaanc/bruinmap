@@ -60,6 +60,7 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/");
     } catch (err) {
       console.error(err);
+      throw(err);
     }
   };
 
