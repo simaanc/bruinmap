@@ -41,6 +41,13 @@
 	font-weight: bold;
 }
 
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(96%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
 .custom-label .label-inner {
 	display: flex;
 	justify-content: center;

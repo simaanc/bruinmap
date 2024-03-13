@@ -177,7 +177,7 @@ const Navbar = () => {
 						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
 					/>
 					{/* Events */}
-					{!sidebar && !eventsSidebarFromSidebar && ( //BUG: HAMBURGER MENU DOES NOT DISAPPEAR AFTER CLICKING AN EVENT
+					{!sidebar && ( //BUG: HAMBURGER MENU DOES NOT DISAPPEAR AFTER CLICKING AN EVENT
 						<div class="collapse navbar-collapse" id="navbarButtonsExample" >
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
