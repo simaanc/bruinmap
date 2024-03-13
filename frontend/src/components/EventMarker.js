@@ -4,16 +4,47 @@ import customMarkerImg from "../Assets/map-marker-icon.png";
 import L from "leaflet";
 import { useAuth } from "../Context/AuthContext";
 import { Button } from "react-bootstrap";
-import "./Event.css";
+import axios from "axios";
 
-const EventMarker = ({ marker, onSaveEvent, selectedEvent }) => {
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const EventMarker = ({
+  marker,
+  selectedEvent,
+  onPopupClose,
+  handleSaveEvent,
+  handleDeleteEvent,
+}) => {
   const { user } = useAuth();
   const markerRef = useRef(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isEventSaved, setIsEventSaved] = useState(false);
+  const [userEvents, setUserEvents] = useState([]);
 
-  const handleSaveEvent = () => {
-    onSaveEvent(marker);
-  };
+  useEffect(() => {
+    const fetchUserEvents = async () => {
+      try {
+        if (!user) {
+          console.error("User is not logged in.");
+          return;
+        }
+
+        const response = await axios.get(`${API_BASE_URL}/api/auth/events`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        const events = response.data.events;
+
+        setUserEvents(events);
+        setIsEventSaved(events.some((savedEvent) => savedEvent._id === marker._id));
+      } catch (error) {
+        console.error("Error fetching user events:", error);
+      }
+    };
+
+    fetchUserEvents();
+  }, [user, marker]);
 
   const handleMarkerClick = () => {
     if (markerRef.current) {
@@ -38,6 +69,27 @@ const EventMarker = ({ marker, onSaveEvent, selectedEvent }) => {
     html: `<img src="${customMarkerImg}" alt="Custom Marker Icon" style="height: 30px; width: auto;">`,
   });
 
+  const SaveEventButton = () => (
+    <Button
+      type="button"
+      className="outline-primary event-button"
+      onClick={() => handleSaveEvent(marker, () => setIsEventSaved(true))}
+    >
+      Save Event
+    </Button>
+  );
+
+  const DeleteEventButton = () => (
+    <Button
+      variant="danger"
+      type="button"
+      className="outline-primary event-button"
+      onClick={() => handleDeleteEvent(marker, () => setIsEventSaved(false))}
+    >
+      Delete Event
+    </Button>
+  );
+
   return (
     <Marker
       position={[marker.coords[0], marker.coords[1]]}
@@ -55,14 +107,10 @@ const EventMarker = ({ marker, onSaveEvent, selectedEvent }) => {
         <div>
           {!user ? (
             <p>Sign in to save!</p>
+          ) : isEventSaved ? (
+            <DeleteEventButton />
           ) : (
-            <Button
-              type="button"
-              className="outline-primary event-button"
-              onClick={handleSaveEvent}
-            >
-              Save Event
-            </Button>
+            <SaveEventButton />
           )}
         </div>
       </Popup>

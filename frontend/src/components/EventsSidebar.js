@@ -30,14 +30,11 @@ const EventsSidebar = ({
         }
 
         // Make an API request to fetch the user's events from the server
-        const response = await axios.get(
-			`${API_BASE_URL}/api/auth/events`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_BASE_URL}/api/auth/events`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         const events = response.data.events;
 
         console.log("User events:", events);
@@ -66,9 +63,12 @@ const EventsSidebar = ({
       }
     };
 
-    fetchUserEvents();
-    fetchAllEvents();
-  }, [user]);
+    // Fetch user events and all events when the eventsSidebar prop changes
+    if (eventsSidebar) {
+      fetchUserEvents();
+      fetchAllEvents();
+    }
+  }, [user, eventsSidebar]);
 
   // Filter out user's saved events from all events
   const nonSavedEvents = allEvents.filter(
@@ -76,7 +76,7 @@ const EventsSidebar = ({
   );
 
   const handleEventClick = (event) => {
-    window.dispatchEvent(new CustomEvent('eventClick', { detail: event }));
+    window.dispatchEvent(new CustomEvent("eventClick", { detail: event }));
   };
 
   return (
@@ -92,8 +92,7 @@ const EventsSidebar = ({
                 showEventsSidebar(),
                 setEventsSidebarFromSidebar())
               : showEventsSidebar()
-          }
-        >
+          }>
           {eventsSidebarFromSidebar ? (
             <FontAwesomeIcon icon={faArrowLeft} className="fa-icon" />
           ) : (
@@ -102,28 +101,35 @@ const EventsSidebar = ({
         </button>
         <ul
           className="sidebar-menu-items event-options"
-          onClick={showEventsSidebar}
-        >
-          {/* Saved Events */}
-          <li className="event-text">
-            <h2 className="event-header-text" style={{marginTop:"24px"}}>Saved Events</h2>
-            {Array.isArray(userEvents) && userEvents.length > 0 ? (
-              <ul>
-                {userEvents.map((event, index) => (
-                  <li key={index} onClick={() => handleEventClick(event)}>{event.name}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No saved events</p>
-            )}
-          </li>
+          onClick={showEventsSidebar}>
+          {/* Conditionally render Saved Events based on isLoggedIn */}
+          {isLoggedIn && (
+            <li className="event-text">
+              <h2 className="event-header-text" style={{ marginTop: "24px" }}>
+                Saved Events
+              </h2>
+              {Array.isArray(userEvents) && userEvents.length > 0 ? (
+                <ul>
+                  {userEvents.map((event, index) => (
+                    <li key={index} onClick={() => handleEventClick(event)}>
+                      {event.name}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No saved events</p>
+              )}
+            </li>
+          )}
 
           <li className="event-text">
             <h2 className="event-header-text">All Events</h2>
             {nonSavedEvents.length > 0 ? (
               <ul>
                 {nonSavedEvents.map((event, index) => (
-                  <li key={index} onClick={() => handleEventClick(event)}>{event.name}</li>
+                  <li key={index} onClick={() => handleEventClick(event)}>
+                    {event.name}
+                  </li>
                 ))}
               </ul>
             ) : (

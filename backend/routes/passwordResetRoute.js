@@ -62,13 +62,18 @@ router.post("/reset-password/:token", async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
 
+    console.log("Token received:", token);
+
     // Find the user by the reset token
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() },
     });
 
+    console.log("User found:", user);
+
     if (!user) {
+      console.log("Invalid or expired token");
       return res.status(400).json({ message: "Invalid or expired token" });
     }
 
@@ -81,6 +86,7 @@ router.post("/reset-password/:token", async (req, res) => {
     user.resetPasswordExpires = undefined;
     await user.save();
 
+    console.log("Password reset successful");
     res.status(200).json({ message: "Password reset successful" });
   } catch (err) {
     console.error("Error resetting password:", err);

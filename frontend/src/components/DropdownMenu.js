@@ -35,14 +35,20 @@ const DropdownMenu = ({
 	inputClass,
 	buttonStyle,
 	isDarkTheme,
-	handleLogin, // Passed from Navbar.js
-	handleSignUp, // Passed from Navbar.js
+	handleLogin,
+	handleSignUp,
 	loginError,
-}) => {
+  }) => {
 	useEffect(() => {
-		// Function now sets class-based styling for placeholders
-		setPlaceholderStyles(isDarkTheme);
-	}, [isDarkTheme]);
+	  // Function now sets class-based styling for placeholders
+	  setPlaceholderStyles(isDarkTheme);
+  
+	  // Retrieve userEmail from localStorage and set it as the initial email state
+	  const userEmail = localStorage.getItem('userEmail');
+	  if (userEmail) {
+		setEmail(userEmail);
+	  }
+	}, [isDarkTheme, setEmail]);
 
 	// Removed individual style objects in favor of className logic
 	const themeClass = isDarkTheme ? "dark-theme" : "light-theme";
@@ -53,11 +59,6 @@ const DropdownMenu = ({
 			? "dark-theme"
 			: "light-theme";
 	};
-
-	const userEmail = localStorage.getItem('userEmail');
-    if (userEmail) {
-      setEmail(userEmail);
-    }
 
 	const modifiedHandleSignOut = () => {
 		localStorage.removeItem('userEmail'); // Clear user email from localStorage on logout

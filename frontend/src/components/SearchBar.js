@@ -88,7 +88,7 @@ const SearchBar = () => {
 
 	return (
 		<div style={{ position: "relative" }}>
-			<form onSubmit={handleSubmit} class="d-flex">
+			<form onSubmit={handleSubmit} className="d-flex">
 				{/* ... */}
 				<button
 					type="submit"
@@ -102,7 +102,7 @@ const SearchBar = () => {
 						margin: "8px",
 						marginRight: "0px",
 					}}
-					class="input-group-text border-0"
+					className="input-group-text border-0"
 					id="search-addon"
 					onChange={handleChange}
 				>

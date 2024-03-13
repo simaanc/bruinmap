@@ -4,223 +4,244 @@ import { useAuth } from "../Context/AuthContext.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 import BruinMapIcon from "../Assets/bruinmaplogo.svg";
-//import "animate.css";
 import "./Navbar.css";
 import SearchBar from "./SearchBar";
 import GitHubButton from "./GitHubButton";
 import Sidebar from "./Sidebar.js";
 import DropdownMenu from "./DropdownMenu.js";
 import { useThemeDetector } from "./utils";
-import EventsSidebar from "./EventsSidebar.js"
+import EventsSidebar from "./EventsSidebar.js";
+import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Navbar = () => {
-	// States
-	const { user, isLoggedIn, signIn, logout, createUser, resetPassword } =
-		useAuth();
-	const navigate = useNavigate();
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [inputClass, setInputClass] = useState(""); // State for input classes
+  // States
+  const { user, isLoggedIn, signIn, logout, createUser, resetPassword } =
+    useAuth();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [inputClass, setInputClass] = useState(""); // State for input classes
 
-	const buttonStyle =
-		email && password // For the "Sign In" button
-			? { backgroundColor: "#0a87ca" } // Blue background when both fields are filled
-			: { backGroundColor: "grey" }; // Grey background when either field is empty
+  const buttonStyle =
+    email && password // For the "Sign In" button
+      ? { backgroundColor: "#0a87ca" } // Blue background when both fields are filled
+      : { backGroundColor: "grey" }; // Grey background when either field is empty
 
-	const theme = useThemeDetector();
+  const theme = useThemeDetector();
 
-	// For the sidebar
-	const [sidebar, setSidebar] = useState(false);
-	const showSidebar = () => {
-		setSidebar(!sidebar);
-	};
-	// For the event sidebar
-	const [eventsSidebar, setEventsSidebar] = useState(false);
-	const showEventsSidebar = () => {
-		setEventsSidebar(!eventsSidebar);
-	};
-	const [eventsSidebarFromSidebar, setEventsSidebarFromSidebar] = useState(false);
+  // For the sidebar
+  const [sidebar, setSidebar] = useState(false);
+  const showSidebar = () => {
+    setSidebar(!sidebar);
+  };
+  // For the event sidebar
+  const [eventsSidebar, setEventsSidebar] = useState(false);
+  const showEventsSidebar = () => {
+    setEventsSidebar(!eventsSidebar);
+  };
+  const [eventsSidebarFromSidebar, setEventsSidebarFromSidebar] =
+    useState(false);
 
-	const triggerShakeAnimation = () => {
-		setInputClass("animate__animated animate__shakeX");
-		setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
-	};
+  const triggerShakeAnimation = () => {
+    setInputClass("animate__animated animate__shakeX");
+    setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
+  };
 
-	//For login errors
-	const [loginError, setLoginError] = useState(false);
+  //For login errors
+  const [loginError, setLoginError] = useState(false);
 
-	//const resetLoginError = () => setLoginError(false);
+  const handleLogin = async () => {
+    try {
+      await signIn(email, password); // Attempt to sign in
+      localStorage.setItem("userEmail", email); // Persist user's email on successful login
+      setLoginError(false); // Reset loginError on successful login
+      navigate("/"); // Navigate to home page on success
+    } catch (error) {
+      console.error("Login error:", error);
+      setLoginError(true); // Set loginError to true on failure
+    }
+  };
 
+  // Function to handle signup
+  const handleSignUp = async () => {
+    try {
+      await createUser(email, password);
+      localStorage.setItem("userEmail", email); // Persist user's email on successful login
+      setLoginError(false); // Reset loginError on successful login
+      navigate("/");
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Signup error: " + error);
+      setLoginError(true); // Set loginError to true on failure
+    }
+  };
 
-	const handleLogin = async () => {
-		try {
-			await signIn(email, password); // Attempt to sign in
-			localStorage.setItem('userEmail', email); // Persist user's email on successful login
-    		setLoginError(false); // Reset loginError on successful login
-			navigate('/'); // Navigate to home page on success
-		  } catch (error) {
-			console.error('Login errorr:', error);
-			setLoginError(true); // Step 3: Set loginError to true on failure
-			// Optional: triggerShakeAnimation or other visual feedback here
-		  }
-	};
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      navigate("/Home");
+    } catch (error) {
+      console.error("Sign out error:", error);
+    }
+  };
 
-	// Function to handle signup
-	const handleSignUp = async () => {
-		try {
-			await createUser(email, password);
-			navigate("/");
-		} catch (error) {
-			console.error("Signup error:", error);
-			alert("Signup error: " + error);
-			//triggerShakeAnimation(); // If you have an animation for errors
-		}
-	};
+  const handleResetPassword = async () => {
+    if (!email) {
+      alert("Please enter your email address.");
+      return;
+    }
+    try {
+      await resetPassword(email);
+      alert("Please check your email to reset your password.");
+    } catch (error) {
+      console.error("Password reset error:", error);
+    }
+  };
 
-	const handleSignOut = async () => {
-		try {
-			await logout();
-			navigate("/Home");
-		} catch (error) {
-			console.error("Sign out error:", error);
-		}
-	};
+  const [userEvents, setUserEvents] = useState([]);
 
-	const handleResetPassword = async () => {
-		if (!email) {
-			alert("Please enter your email address.");
-			return;
-		}
-		try {
-			await resetPassword(email);
-			alert("Please check your email to reset your password.");
-		} catch (error) {
-			console.error("Password reset error:", error);
-		}
-	};
+  const fetchUserEvents = async () => {
+    try {
+      if (!user) {
+        console.error("User is not logged in.");
+        return;
+      }
 
+      const response = await axios.get(`${API_BASE_URL}/api/auth/events`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const events = response.data.events;
 
-	return (
-		<>
-			<div>
-				<nav className="navbar navbar-expand-md navbar-dark " >
-					<div style={{ display: "flex", alignItems: "center", gap: "20px", zIndex: "10000" }}>
-						{/* Logo at the top left */}
-						<Link to="/" className="navbar-brand me-2 bruinmap-logo">
-							<img
-								src={BruinMapIcon}
-								height="64"
-								alt="BruinMap Logo"
-								loading="lazy"
-							/>
-						</Link>
+      setUserEvents(events);
+    } catch (error) {
+      console.error("Error fetching user events:", error);
+    }
+  };
 
-						{/* Simple Dropdown Menu */}
-						<DropdownMenu
-							user={user}
-							handleSignOut={handleSignOut}
-							handleResetPassword={handleResetPassword}
-							email={email}
-							setEmail={setEmail}
-							password={password}
-							setPassword={setPassword}
-							inputClass={inputClass}
-							buttonStyle={buttonStyle}
-							isDarkTheme={theme}
-							handleLogin={handleLogin}
-							handleSignUp={handleSignUp}
-							loginError={loginError}
-						/>
-					</div>
+  return (
+    <>
+      <div>
+        <nav className="navbar navbar-expand-md navbar-dark ">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              zIndex: "10000",
+            }}>
+            {/* Logo at the top left */}
+            <Link to="/" className="navbar-brand me-2 bruinmap-logo">
+              <img
+                src={BruinMapIcon}
+                height="64"
+                alt="BruinMap Logo"
+                loading="lazy"
+              />
+            </Link>
 
-					{/* Sidebar */}
-					{!eventsSidebar && (
-						<button
-							className="sidebar-button"
-							type="button"
-							data-mdb-target="#navbarButtonsExample"
-							aria-controls="navbarButtonsExample"
-							aria-expanded="false"
-							aria-label="Toggle navigation"
-							onClick={showSidebar}
-						>
-							{sidebar ? (
-								<FontAwesomeIcon
-									icon={faX}
-									style={{ color: "white", padding: "4px" }}
-								/>
-							) : (
-								<FontAwesomeIcon
-									icon={faBars}
-									style={{ color: "white", padding: "4px" }}
-								/>
-							)}
-						</button>
-					)}
-					<Sidebar
-						sidebar={sidebar}
-						showSidebar={showSidebar}
-						isLoggedIn={isLoggedIn}
-						showEventsSidebar={showEventsSidebar}
-						style={{ height: "100%" }}
-						eventsSidebarFromSidebar={eventsSidebarFromSidebar}
-						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
-					/>
-					<EventsSidebar
-						eventsSidebar={eventsSidebar}
-						showEventsSidebar={showEventsSidebar}
-						isLoggedIn={isLoggedIn}
-						style={{ height: "100%" }}
-						showSidebar={showSidebar}
-						eventsSidebarFromSidebar={eventsSidebarFromSidebar}
-						setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
-					/>
-					{/* Events */}
-					{!sidebar && ( //BUG: HAMBURGER MENU DOES NOT DISAPPEAR AFTER CLICKING AN EVENT
-						<div class="collapse navbar-collapse" id="navbarButtonsExample" >
-							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-								<li class="nav-item">
+            {/* Simple Dropdown Menu */}
+            <DropdownMenu
+              user={user}
+              handleSignOut={handleSignOut}
+              handleResetPassword={handleResetPassword}
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+              inputClass={inputClass}
+              buttonStyle={buttonStyle}
+              isDarkTheme={theme}
+              handleLogin={handleLogin}
+              handleSignUp={handleSignUp}
+              loginError={loginError}
+            />
+          </div>
 
+          {/* Sidebar */}
+          {!eventsSidebar && (
+            <button
+              className="sidebar-button"
+              type="button"
+              data-mdb-target="#navbarButtonsExample"
+              aria-controls="navbarButtonsExample"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              onClick={showSidebar}>
+              {sidebar ? (
+                <FontAwesomeIcon
+                  icon={faX}
+                  style={{ color: "white", padding: "4px" }}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faBars}
+                  style={{ color: "white", padding: "4px" }}
+                />
+              )}
+            </button>
+          )}
+          <Sidebar
+            sidebar={sidebar}
+            showSidebar={showSidebar}
+            isLoggedIn={isLoggedIn}
+            showEventsSidebar={showEventsSidebar}
+            style={{ height: "100%" }}
+            eventsSidebarFromSidebar={eventsSidebarFromSidebar}
+            setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
+          />
+          <EventsSidebar
+            eventsSidebar={eventsSidebar}
+            showEventsSidebar={showEventsSidebar}
+            isLoggedIn={isLoggedIn}
+            style={{ height: "100%" }}
+            showSidebar={showSidebar}
+            eventsSidebarFromSidebar={eventsSidebarFromSidebar}
+            setEventsSidebarFromSidebar={setEventsSidebarFromSidebar}
+            savedEvents={userEvents}
+            fetchUserEvents={fetchUserEvents}
+          />
+          {/* Events */}
+          {!sidebar && (
+            <div className="collapse navbar-collapse" id="navbarButtonsExample">
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item"></li>
+              </ul>
 
-								</li>
-							</ul>
+              {/* Search bar and search icon */}
+              <span style={{ marginRight: "0px" }}>
+                <nav className="navbar navbar-dark">
+                  <span className="container-fluid">
+                    <SearchBar />
+                    {/* Not using EventsButton.js, just using it inline w/ Srishti's method */}
+                    <button
+                      className="input-group-text border-0"
+                      style={{
+                        backgroundColor: "#0a87ca",
+                        borderColor: "#024b76",
+                        borderWidth: "1.5px",
+                        boxShadow: "0 0 5px #0a87ca",
+                        padding: "8px",
+                        margin: "8px",
+                        color: "white",
+                        borderRadius: "8px",
+                      }}
+                      onClick={showEventsSidebar}>
+                      Events
+                    </button>
 
-							{/* Search bar and search icon */}
-							<span style={{ marginRight: "0px" }} >
-								<nav class="navbar navbar-dark" >
-									<span class="container-fluid" >
-										<SearchBar />
-										{/* Not using EventsButton.js, just using it inline w/ Srishti's method */}
-										<button
-											class="input-group-text border-0"
-											//href="#"
-											style={{
-												backgroundColor: "#0a87ca",
-												borderColor: "#024b76",
-												borderWidth: "1.5px",
-												boxShadow: "0 0 5px #0a87ca",
-												padding: "8px",
-												margin: "8px",
-												color: "white",
-												borderRadius: "8px",
-
-											}}
-											onClick={showEventsSidebar}
-										>
-											Events
-										</button>
-
-
-										<GitHubButton />
-									</span>
-								</nav>
-							</span>
-						</div>
-					)}
-				</nav>
-			</div>
-		</>
-	);
+                    <GitHubButton />
+                  </span>
+                </nav>
+              </span>
+            </div>
+          )}
+        </nav>
+      </div>
+    </>
+  );
 };
 export default Navbar;

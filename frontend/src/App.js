@@ -11,6 +11,7 @@ function App() {
       <AuthContextProvider>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/Home" element={<Home />} />
           <Route path="/reset/:token" element={<ResetPassword />} />
         </Routes>
       </AuthContextProvider>

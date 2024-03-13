@@ -19,7 +19,9 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password,
       });
-      setUser(response.data.user);
+      const { user, token } = response.data;
+      localStorage.setItem("token", token);
+      setUser(user);
       navigate("/");
     } catch (err) {
       setError(err.response.data.message);

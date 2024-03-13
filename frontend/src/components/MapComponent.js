@@ -15,6 +15,7 @@ import EventMarker from "./EventMarker";
 import { useAuth } from "../Context/AuthContext";
 import { useThemeDetector } from "./utils";
 import polylabel from "polylabel";
+import { Button } from "react-bootstrap";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -29,7 +30,14 @@ const calculatePolygonPixelBounds = (map, positions) => {
   return { width: maxX - minX, height: maxY - minY };
 };
 
-const DivIcon = ({ positions, text, isVisible, onIconClick, building, zoomLevel }) => {
+const DivIcon = ({
+  positions,
+  text,
+  isVisible,
+  onIconClick,
+  building,
+  zoomLevel,
+}) => {
   const map = useMap();
 
   useEffect(() => {
@@ -41,15 +49,18 @@ const DivIcon = ({ positions, text, isVisible, onIconClick, building, zoomLevel 
     const polygonBounds = calculatePolygonPixelBounds(map, positions);
 
     // Use the center from the building if available and valid, otherwise use polylabel to calculate the center
-    const center = building && building.center && building.center.length === 2
-      ? building.center
-      : polylabel([positions], 1.0);
+    const center =
+      building && building.center && building.center.length === 2
+        ? building.center
+        : polylabel([positions], 1.0);
 
     // Calculate the appropriate font size based on the polygon bounds and zoom level
-    const baseFontSize = Math.min(polygonBounds.width, polygonBounds.height) * 0.1;
-    const fontSize = zoomLevel <= 18
-      ? baseFontSize
-      : Math.max(10, baseFontSize * (1 - (zoomLevel - 18) * 0.1));
+    const baseFontSize =
+      Math.min(polygonBounds.width, polygonBounds.height) * 0.1;
+    const fontSize =
+      zoomLevel <= 18
+        ? baseFontSize
+        : Math.max(10, baseFontSize * (1 - (zoomLevel - 18) * 0.1));
 
     const iconHtml = `<div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; background: transparent; border: none; font-size: ${fontSize}px; text-align: center;">${text}</div>`;
     const icon = L.divIcon({
@@ -305,7 +316,7 @@ const MouseCoordinateDisplay = () => {
     <div
       style={{
         position: "absolute",
-        bottom: "50px",
+        bottom: "90px",
         right: "10px",
         zIndex: 1000,
         background: "white",
@@ -372,19 +383,63 @@ const MapComponent = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [userEvents, setUserEvents] = useState([]);
+  
+  const handleDeleteEvent = async (event, callback) => {
+    try {
+      if (!user) {
+        console.error("User is not logged in.");
+        return;
+      }
+  
+      // Make an API request to remove the event from the user's events array
+      await axios.delete(`${API_BASE_URL}/api/auth/events/${event._id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+  
+      console.log("Event deleted", event.name);
+  
+      // Call the callback function to update the isEventSaved state
+      callback();
+    } catch (error) {
+      console.log("Error deleting event: ", error);
+    }
+  };
 
   const mapRef = useRef(null);
   const buildingData = useBuildingData();
 
   const { user } = useAuth();
 
-  const handleSaveEvent = async (event) => {
+  const fetchUserEvents = async () => {
     try {
       if (!user) {
         console.error("User is not logged in.");
         return;
       }
 
+      const response = await axios.get(`${API_BASE_URL}/api/auth/events`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const events = response.data.events;
+
+      setUserEvents(events);
+    } catch (error) {
+      console.error("Error fetching user events:", error);
+    }
+  };
+
+  const handleSaveEvent = async (event, callback) => {
+    try {
+      if (!user) {
+        console.error("User is not logged in.");
+        return;
+      }
+  
       // Make an API request to save the event to the user's events array
       await axios.post(
         `${API_BASE_URL}/api/auth/save-event`,
@@ -397,8 +452,11 @@ const MapComponent = () => {
           },
         }
       );
-
+  
       console.log("Event saved", event.name);
+  
+      // Call the callback function to update the isEventSaved state
+      callback();
     } catch (error) {
       console.log("Error saving event: ", error);
     }
@@ -549,6 +607,10 @@ const MapComponent = () => {
     fetchEvents();
   }, []);
 
+  const isEventSaved = (event) => {
+    return userEvents.some((savedEvent) => savedEvent._id === event._id);
+  };
+
   useEffect(() => {
     const handleSearchEvent = (event) => {
       const suggestion = event.detail;
@@ -632,9 +694,11 @@ const MapComponent = () => {
           <EventMarker
             key={event._id}
             marker={event}
-            onSaveEvent={handleSaveEvent}
             selectedEvent={selectedEvent}
             onPopupClose={handlePopupClose}
+            userEvents={userEvents}
+            handleSaveEvent={handleSaveEvent}
+            handleDeleteEvent={handleDeleteEvent}
           />
         ))}
 
@@ -651,8 +715,8 @@ const MapComponent = () => {
           <SearchResultsOverlay searchResults={searchResults} />
         )}
 
-        <MouseCoordinateDisplay />
-        <MapClickLogger />
+        {/* <MouseCoordinateDisplay /> */}
+        {/* <MapClickLogger /> */}
       </MapContainer>
     </div>
   );
