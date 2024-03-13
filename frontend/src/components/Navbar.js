@@ -56,7 +56,8 @@ const Navbar = () => {
 	const handleLogin = async () => {
 		try {
 			await signIn(email, password); // Attempt to sign in
-			setLoginError(false); // Reset loginError on successful login
+			localStorage.setItem('userEmail', email); // Persist user's email on successful login
+    		setLoginError(false); // Reset loginError on successful login
 			navigate('/'); // Navigate to home page on success
 		  } catch (error) {
 			console.error('Login errorr:', error);

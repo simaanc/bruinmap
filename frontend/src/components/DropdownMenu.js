@@ -54,6 +54,16 @@ const DropdownMenu = ({
 			: "light-theme";
 	};
 
+	const userEmail = localStorage.getItem('userEmail');
+    if (userEmail) {
+      setEmail(userEmail);
+    }
+
+	const modifiedHandleSignOut = () => {
+		localStorage.removeItem('userEmail'); // Clear user email from localStorage on logout
+		handleSignOut(); // Call the original sign out handler
+	  };
+
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const handleDropdownToggle = (isOpen, event, metadata) => {
@@ -79,13 +89,14 @@ const DropdownMenu = ({
 							{/* <Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
 						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-2">Another action</Dropdown.Item> */}
 							<DropdownHeader style={{color: "white", alignItems:"center"}}>
-								Logged in as:   <em >{email}</em>
+								Logged in as:   <em>{localStorage.getItem('userEmail')}</em>
 							</DropdownHeader>
 							<Button
 								type="button"
 								variant="outline-danger"
-								onClick={handleSignOut}
+								onClick={modifiedHandleSignOut}
 								className="logout-button"
+								
 							>
 								Logout
 							</Button>
