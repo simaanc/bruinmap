@@ -143,7 +143,7 @@ const FloorSelector = ({ selectedBuilding, selectedFloor, onChange }) => {
   // Now, you can safely use `getThemeStyle` within your component
   const floorSelectorStyle = {
     position: "absolute",
-    zIndex: 1000,
+    zIndex: 10,
     background: theme === "dark" ? "#212529" : "white",
     padding: "10px",
     bottom: "10px", // Adjust this value as needed

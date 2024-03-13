@@ -24,6 +24,7 @@ export const AuthContextProvider = ({ children }) => {
     } catch (err) {
       setError(err.response.data.message);
       console.error("Error creating user: ", err.response.data.message);
+      throw(err.response.data.message);
     } finally {
       setLoading(false);
     }

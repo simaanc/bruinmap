@@ -47,14 +47,22 @@ const Navbar = () => {
 		setTimeout(() => setInputClass(""), 500); // Remove the class after 1 second
 	};
 
+	//For login errors
+	const [loginError, setLoginError] = useState(false);
+
+	//const resetLoginError = () => setLoginError(false);
+
+
 	const handleLogin = async () => {
 		try {
-			await signIn(email, password);
-			navigate("/");
-		} catch (error) {
-			console.error("Login error:", error);
-			triggerShakeAnimation(); // If you have an animation for errors
-		}
+			await signIn(email, password); // Attempt to sign in
+			setLoginError(false); // Reset loginError on successful login
+			navigate('/'); // Navigate to home page on success
+		  } catch (error) {
+			console.error('Login errorr:', error);
+			setLoginError(true); // Step 3: Set loginError to true on failure
+			// Optional: triggerShakeAnimation or other visual feedback here
+		  }
 	};
 
 	// Function to handle signup
@@ -64,7 +72,8 @@ const Navbar = () => {
 			navigate("/");
 		} catch (error) {
 			console.error("Signup error:", error);
-			triggerShakeAnimation(); // If you have an animation for errors
+			alert("Signup error: " + error);
+			//triggerShakeAnimation(); // If you have an animation for errors
 		}
 	};
 
@@ -95,7 +104,7 @@ const Navbar = () => {
 		<>
 			<div>
 				<nav className="navbar navbar-expand-md navbar-dark " >
-					<div style={{ display: "flex", alignItems: "center", gap: "20px", zIndex: "10000"}}>
+					<div style={{ display: "flex", alignItems: "center", gap: "20px", zIndex: "10000" }}>
 						{/* Logo at the top left */}
 						<Link to="/" className="navbar-brand me-2 bruinmap-logo">
 							<img
@@ -120,6 +129,7 @@ const Navbar = () => {
 							isDarkTheme={theme}
 							handleLogin={handleLogin}
 							handleSignUp={handleSignUp}
+							loginError={loginError}
 						/>
 					</div>
 
@@ -176,12 +186,12 @@ const Navbar = () => {
 							</ul>
 
 							{/* Search bar and search icon */}
-							<span style={{ marginRight: "0px"}} >
+							<span style={{ marginRight: "0px" }} >
 								<nav class="navbar navbar-dark" >
 									<span class="container-fluid" >
-										<SearchBar  />
+										<SearchBar />
 										{/* Not using EventsButton.js, just using it inline w/ Srishti's method */}
-										<button 
+										<button
 											class="input-group-text border-0"
 											//href="#"
 											style={{
@@ -193,7 +203,7 @@ const Navbar = () => {
 												margin: "8px",
 												color: "white",
 												borderRadius: "8px",
-												
+
 											}}
 											onClick={showEventsSidebar}
 										>
