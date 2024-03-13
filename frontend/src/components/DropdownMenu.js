@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Col, Dropdown, Form, FormControl } from "react-bootstrap";
+import { Button, Col, Dropdown, DropdownHeader, DropdownItem, Form, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import "./Dropdown.css";
@@ -78,6 +78,9 @@ const DropdownMenu = ({
 						<>
 							{/* <Dropdown.Item className="dropdown-loggedin-options" href="#/action-1">Action</Dropdown.Item>
 						<Dropdown.Item className="dropdown-loggedin-options" href="#/action-2">Another action</Dropdown.Item> */}
+							<DropdownHeader style={{color: "white", alignItems:"center"}}>
+								Logged in as:   <em >{email}</em>
+							</DropdownHeader>
 							<Button
 								type="button"
 								variant="outline-danger"
