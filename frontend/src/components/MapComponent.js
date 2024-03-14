@@ -208,7 +208,6 @@ const BuildingPolygons = ({
           (selectedBuilding && zoomLevel <= 19 && zoomLevel > 16)
         }
         onIconClick={() => handleBuildingClick(building)}
-        building={building} // Pass the building object as a prop
       />
 
       {selectedBuilding &&
@@ -254,9 +253,6 @@ const RoomPolygon = ({ room, zoomLevel }) => {
           <div>
             <h2>{room.name}</h2>
             <p>{room.content}</p>
-            <p>
-              <b>Building:</b> {room.building}
-            </p>
           </div>
         </Popup>
       )}
