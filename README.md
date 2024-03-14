@@ -40,7 +40,7 @@ The script will create the necessary `.env` files in the backend and frontend fo
 ## Folder Structure
 
 The project has the following folder structure:
-bruinmap/
+```bruinmap/
 ├── backend/
 │   ├── .env
 │   ├── package.json
@@ -51,6 +51,7 @@ bruinmap/
 │   └── ...
 ├── start.sh
 └── README.md
+```
 
 - The `backend` folder contains the backend application code and its associated files.
 - The `frontend` folder contains the frontend application code and its associated files.
