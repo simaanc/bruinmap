@@ -1,6 +1,6 @@
 # BruinMap
 
-This project ronsists of a backend and frontend application. Follow the instructions below to set up and run the project on your local machine.
+This is a mobile-first web app that features an interactive campus map for both indoors and outdoors. It features login & signup authentication functionality, reset password capability, an interactive map, searchable rooms in the Math/Sci building of UCLA, an event saving feature, and more. Follow the instructions below to set up and run the project on your local machine.
 
 ## Prerequisites
 
