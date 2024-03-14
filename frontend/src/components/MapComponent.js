@@ -683,7 +683,7 @@ const MapComponent = () => {
         />
 
         {/* Render search results as rectangles */}
-        {isSearchActive && (
+        {isSearchActive && zoomLevel > 19 && (
           <SearchResultsOverlay searchResults={searchResults} />
         )}
 
