@@ -1,6 +1,6 @@
-# Project Name
+# BruinMap
 
-This project consists of a backend and frontend application. Follow the instructions below to set up and run the project on your local machine.
+This project ronsists of a backend and frontend application. Follow the instructions below to set up and run the project on your local machine.
 
 ## Prerequisites
 
@@ -55,3 +55,10 @@ bruinmap/
 - The `backend` folder contains the backend application code and its associated files.
 - The `frontend` folder contains the frontend application code and its associated files.
 - The `start.sh` file is the start and setup script that automates the setup  and starting process.
+
+## Authors
+* Christopher Simaan (506231577)
+* Srishti Ganu (206230881)
+* Riley Jahanshahi (406280988)
+* Chrissy Chien (406232884)
+* Brandon Rodmel (806280905)
