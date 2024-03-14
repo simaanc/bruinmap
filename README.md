@@ -6,8 +6,8 @@ This project consists of a backend and frontend application. Follow the instruct
 
 Make sure you have the following installed on your system:
 
-- Node.js (version X.X.X)
-- npm (version X.X.X)
+- Node.js
+- npm
 
 ## Setup Instructions
 
@@ -28,9 +28,30 @@ The setup script will guide you through the following steps:
 - Enter the MongoDB URI for the backend.
 - Enter the JWT secret for the backend.
 - Enter the backend server port (default: 8000).
+- Enter the API reset email.
+- Enter the API reset password.
 
 The script will create the necessary `.env` files in the backend and frontend folders with the provided values.
 
 5. The script will automatically install the dependencies and start the backend and frontend servers.
 
 6. Once the setup is complete, you can access the application in your web browser at `http://localhost:3000`.
+
+## Folder Structure
+
+The project has the following folder structure:
+bruinmap/
+├── backend/
+│   ├── .env
+│   ├── package.json
+│   └── ...
+├── frontend/
+│   ├── .env
+│   ├── package.json
+│   └── ...
+├── start.sh
+└── README.md
+
+- The `backend` folder contains the backend application code and its associated files.
+- The `frontend` folder contains the frontend application code and its associated files.
+- The `start.sh` file is the start and setup script that automates the setup  and starting process.

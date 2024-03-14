@@ -7,12 +7,16 @@ const nodemailer = require("nodemailer");
 
 const API_BASE_URL = process.env.REACT_APP_FRONTEND_BASE_URL;
 
+const API_RESET_EMAIL = process.env.API_RESET_EMAIL;
+const API_RESET_PASSWORD = process.env.API_RESET_PASSWORD;
+
+
 // Assuming you have configured nodemailer with your email account
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "bruinmap35L@gmail.com",
-    pass: "zrwf sjel lxrf sshi",
+    user: `${API_RESET_EMAIL}`,
+    pass: `${API_RESET_PASSWORD}`
   },
 });
 
