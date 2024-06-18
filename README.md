@@ -2,6 +2,10 @@
 
 This is a mobile-first web app that features an interactive campus map for both indoors and outdoors. It features login & signup authentication functionality, reset password capability, an interactive map, searchable rooms in the Math/Sci building of UCLA, an event saving feature, and more. Follow the instructions below to set up and run the project on your local machine.
 
+## Demo
+
+[Demo Link](https://youtu.be/3gj2NUHj248?si=vHfa0wLtQ6Jkzk56)
+
 ## Prerequisites
 
 Make sure you have the following installed on your system:
